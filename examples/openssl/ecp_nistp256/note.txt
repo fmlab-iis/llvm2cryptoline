@@ -1,0 +1,13 @@
+-- smallfelem_neg:
+Algebraic specification: passed
+Range specification:
+The condition (out[i] < out[i] + 2^105) fails; but the modified
+conditions (out[i] < out[i] + 2^105 for i=0,2,3) and (out[1] <= out[1]
++ 2^105) pass.
+
+-- felem_diff:
+Algebraic specification: passed
+Range specification:
+The condition (out[i] < out[i] + 2^105) fails; but the modified
+conditions (out[i] < out[i] + 2^105 for i=0,2,3) and (out[1] <= out[1]
++ 2^105) pass.

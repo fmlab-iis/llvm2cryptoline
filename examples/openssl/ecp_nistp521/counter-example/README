@@ -1,0 +1,48 @@
+This is a little program to compare the outputs of functions
+	felem_square,
+	felem_mul, 
+	felem_diff_128_64
+against the outputs of functions
+	BN_mod_sqr,
+	BN_mod_mul,
+	BN_mod_sub.
+The objective is to check the correctness of these felem_* functions.
+
+
+/////////////////////////////////////////////////////////
+//
+//  HOW TO USE IT
+//
+/////////////////////////////////////////////////////////
+
+Note: this is only tested on Ubuntu and MacOS using GCC and Clang.
+
+1. Configure your OpenSSL source code with the option 
+   "enable-ec_nistp_64_gcc_128", and then compile it to generate the
+   static library "libcrypto.a". For example:
+
+   > ./config enable-ec_nistp_64_gcc_128
+   > make
+
+2. Enter the directory of this little program, run "make" while 
+   assigning SRC_DIR with the path of the OpenSSL source tree:
+
+   > make SRC_DIR=path-to-OpenSSL
+   (replace "path-to-OpenSSL" with the path to the source tree)
+
+3. Execute the binary "check".
+
+
+/////////////////////////////////////////////////////////
+//
+//  WHAT IS THE OUTPUT OF IT
+//
+/////////////////////////////////////////////////////////
+
+This little program contains one counter-example and one passed 
+example for each felem_* function. In the output from the program
+you can see the inputs and outputs from felem_* and BN_mod_* 
+functions. 
+
+
+
