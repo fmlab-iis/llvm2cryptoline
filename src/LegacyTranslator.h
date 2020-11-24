@@ -8,25 +8,20 @@
 #ifndef SRC_TRANSLATOR_H_
 #define SRC_TRANSLATOR_H_
 
+#include "LegacyTypes.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/IR/Instructions.h"
 
-#include "Types.h"
-
-
-
-namespace llvm2cryptoline {
 
 using namespace llvm;
-using namespace cryptoline;
 
+namespace legacy {
 
 class Translator {
 public:
     PointerTable pointerTable;
     VariableSet defVars;
     VariableSet undefVars;
-    VariableSet unusedVars;
     StatementList result;
     bool heuristcs = true;
     bool heuristcs_equiv = true;
@@ -38,9 +33,8 @@ public:
     std::string toLower(std::string s);
     unsigned int sizeOf(llvm::Type* ty);
     unsigned int offsetAt(llvm::Type* ty, unsigned i);
-    bool isDefined(Variable var);
-    void use(Variable var);
-    void define(Variable var);
+    bool isDefined(std::string var);
+    void checkDefinedness(std::string var);
     std::string toString(llvm::Instruction* inst);
 
 private:
@@ -52,7 +46,6 @@ private:
     void evalBinaryOp(BinaryOperator* bo);
     void evalGetElementPtr(GetElementPtrInst* gepi);
     void evalInsertElement(InsertElementInst* iei);
-    void evalExtractElement(ExtractElementInst* eei);
     void evalZExt(ZExtInst* zei);
     void evalTrunc(TruncInst* ti);
     void evalBitCast(BitCastInst* bci);

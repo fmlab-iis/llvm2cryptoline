@@ -7,8 +7,12 @@
 #include <llvm/Support/SourceMgr.h>
 #include "Types.h"
 #include "Translator.h"
+#include "LegacyTypes.h"
+#include "LegacyTranslator.h"
+
 
 using namespace llvm;
+using namespace llvm2cryptoline;
 
 int main(int argc, char* const* argv) {
 
