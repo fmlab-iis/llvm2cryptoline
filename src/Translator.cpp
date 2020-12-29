@@ -1368,8 +1368,12 @@ void Translator::evalTrunc(TruncInst* ti) {
             this->use(v);
         }
 
+        Var dstTmp = Var::UVar(srcWidth, getName(ti));
+        Statement s = Statement::Split(Var::UVar(srcWidth, "tmp_" + getName(t1)),
+                                       dstTmp, src, Arg::Num(dstWidth));
+        this->result.push_back(s);
         Var dst = Var::UVar(dstWidth, getName(ti));
-        Statement s = Statement::Vpc(dst, src);
+        s = Statement::Vpc(dst, dstTmp);
         this->result.push_back(s);
         this->define(dst);
     } else if (dstType->isVectorTy()) {
@@ -1380,7 +1384,7 @@ void Translator::evalTrunc(TruncInst* ti) {
         Arg src;
         bool t1isConstant = false;
         Constant *c1;
-        Var dst, v;
+        Var dstTmp, dst, v;
         Statement s;
 
         if ((c1 = llvm::dyn_cast<llvm::Constant>(t1))) {
@@ -1388,6 +1392,7 @@ void Translator::evalTrunc(TruncInst* ti) {
         }
 
         for (int i = 0; i < eleNum; i++) {
+            dstTmp = Var::UVar(srcWidth, getName(ti), i);
             dst = Var::UVar(dstWidth, getName(ti), i);
 
             if (t1isConstant) {
@@ -1399,6 +1404,9 @@ void Translator::evalTrunc(TruncInst* ti) {
                 this->use(v);
             }
 
+            s = Statement::Split(Var::UVar(srcWidth, "tmp_" + getName(t1), i),
+                                           dstTmp, src, Arg::Num(dstWidth));
+            this->result.push_back(s);
             s = Statement::Vpc(dst, src);
             this->result.push_back(s);
             this->define(dst);
