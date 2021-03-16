@@ -86,8 +86,16 @@ Argument Argument::UConst(unsigned w, std::string val) {
     return Argument(CryptoLineOps::Const, CryptoLineType::uint, w, val);
 }
 
+Argument Argument::SConst(unsigned w, std::string val) {
+    return Argument(CryptoLineOps::Const, CryptoLineType::sint, w, val);
+}
+
 Argument Argument::UVar(unsigned w, std::string val) {
     return Argument(CryptoLineOps::Var, CryptoLineType::uint, w, val);
+}
+
+Argument Argument::SVar(unsigned w, std::string val) {
+    return Argument(CryptoLineOps::Var, CryptoLineType::sint, w, val);
 }
 
 Argument Argument::Flag(std::string val) {
@@ -289,8 +297,16 @@ Variable Variable::UVar(unsigned w, std::string name) {
     return Variable(CryptoLineType::uint, w, name);
 }
 
+Variable Variable::SVar(unsigned w, std::string name) {
+    return Variable(CryptoLineType::sint, w, name);
+}
+
 Variable Variable::UVar(unsigned w, std::string name, int index) {
     return Variable(CryptoLineType::uint, w, name, index);
+}
+
+Variable Variable::SVar(unsigned w, std::string name, int index) {
+    return Variable(CryptoLineType::sint, w, name, index);
 }
 
 std::string Variable::toDecl() const {
@@ -394,6 +410,7 @@ std::map<CryptoLineOps, std::string> Statement::name = {
         {CryptoLineOps::Nondet, "nondet"},
         {CryptoLineOps::Cast, "cast"},
         {CryptoLineOps::Vpc, "vpc"},
+        {CryptoLineOps::Call, "call"},
         {CryptoLineOps::Assume, "assume"},
         {CryptoLineOps::Assert, "assert"}
 };
@@ -597,6 +614,13 @@ Statement Statement::Vpc(Argument dst, Argument src) {
     return s;
 }
 
+Statement Statement::Call(std::string fn) {
+    Statement s;
+    s.op = CryptoLineOps::Call;
+    s.text = fn;
+    return s;
+}
+
 Statement Statement::Assume(Predicate alg, Predicate range) {
     Statement s;
     s.op = CryptoLineOps::Assume;
@@ -664,6 +688,14 @@ std::string Statement::toStr() {
     case CryptoLineOps::Vpc:
         s = Statement::name[this->op] + " " + this->args[0].toTypedStr()
             + " " + this->args[1].toTypedStr() + ";";
+        break;
+    // call
+    case CryptoLineOps::Call:
+        s = Statement::name[this->op] + " " + this->text + "(";
+        for (int i = 1; i < this->args.size(); i++) {
+            s += this->args[i].toSrc() + ", ";
+        }
+        s += this->args[0].toSrc() + ");";
         break;
     // assume/assert
     case CryptoLineOps::Assume:

@@ -52,12 +52,18 @@ ProgramCounter Translator::evaluate(ProgramCounter pc) {
     } else if (ZExtInst* zei = dyn_cast<ZExtInst>(inst)) {
         // zext
         evalZExt(zei);
+    } else if (SExtInst* sei = dyn_cast<SExtInst>(inst)) {
+        // sext
+        evalSExt(sei);
     } else if (TruncInst* ti = dyn_cast<TruncInst>(inst)) {
         // trunc
         evalTrunc(ti);
     } else if (BitCastInst* bci = dyn_cast<BitCastInst>(inst)) {
         // bitcast
         evalBitCast(bci);
+    } else if (CallInst* ci = dyn_cast<CallInst>(inst)) {
+        // call
+        evalCall(ci);
     } else if (ReturnInst* ri = dyn_cast<ReturnInst>(inst)) {
         // return
         // do nothing
@@ -1350,8 +1356,67 @@ void Translator::evalZExt(ZExtInst* zei) {
     }
 }
 
+void Translator::evalSExt(SExtInst* sei) {
+    Type *dstType = sei->getDestTy();
+    Value* t1 = sei->getOperand(0);
+
+    if (dstType->isIntegerTy()) {
+        unsigned srcWidth = t1->getType()->getIntegerBitWidth();
+        unsigned dstWidth = dstType->getIntegerBitWidth();
+
+        Arg src;
+        if (ConstantInt* c1 = llvm::dyn_cast<llvm::ConstantInt>(t1)) {
+            src = Arg::SConst(srcWidth, c1->getValue().toString(10, true));
+        } else {
+            Var v = Var::SVar(srcWidth, getName(t1));
+            src = v;
+            this->use(v);
+        }
+
+        Var dst = Var::SVar(dstWidth, getName(sei));
+        Statement s = Statement::Cast(dst, src);
+        this->result.push_back(s);
+        this->define(dst);
+    } else if (dstType->isVectorTy()) {
+        int eleNum = dstType->getVectorNumElements();
+        unsigned srcWidth = t1->getType()->getVectorElementType()->getIntegerBitWidth();
+        unsigned dstWidth = dstType->getVectorElementType()->getIntegerBitWidth();
+
+        Arg src;
+        bool t1isConstant = false;
+        Constant *c1;
+        Var dst, v;
+        Statement s;
+
+        if ((c1 = llvm::dyn_cast<llvm::Constant>(t1))) {
+            t1isConstant = true;
+        }
+
+        for (int i = 0; i < eleNum; i++) {
+            dst = Var::SVar(dstWidth, getName(sei), i);
+
+            if (t1isConstant) {
+                src = Arg::SConst(srcWidth,
+                                  ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(10, true));
+            } else {
+                v = Var::SVar(srcWidth, getName(t1), i);
+                src = v;
+                this->use(v);
+            }
+
+            s = Statement::Cast(dst, src);
+            this->result.push_back(s);
+            this->define(dst);
+        }
+    } else { // which will not happen
+        errs() << "No translation:" << *sei
+               << " (Unknown type!)" << "\n";
+    }
+}
+
 void Translator::evalTrunc(TruncInst* ti) {
     // TODO: sometimes need cast, sometimes vpc
+    // This implementation converts Trunc in a way like vpc, but keeps the higher part explicit.
     Type *dstType = ti->getDestTy();
     Value* t1 = ti->getOperand(0);
 
@@ -1441,5 +1506,41 @@ void Translator::evalBitCast(BitCastInst* bci) {
         this->pointerTable.add(bci, this->pointerTable.getSymAddr(bci->getOperand(0)));
     } else {
         errs() << "No translation:" << *bci << "\n";
+    }
+}
+
+void Translator::evalCall(CallInst* ci) {
+    // Currently only tail call is converted
+    if (ci->isTailCall()) {
+        Type *retType = ci->getFunctionType()->getReturnType();
+        if (retType->isIntegerTy()) { // only deal with returned integer for now
+            Var dst;
+            unsigned dstWidth = retType->getIntegerBitWidth();
+            if (ci->hasRetAttr(Attribute::AttrKind::SExt)) {
+                dst = Var::SVar(dstWidth, getName(ci));
+            } else {
+                dst = Var::UVar(dstWidth, getName(ci));
+            }
+
+            Statement s = Statement::Call(ci->getCalledFunction()->getName());
+            s.args.push_back(dst);
+            this->define(dst);
+
+            Value* t;
+            Var arg;
+            for (int i = 0; i < ci->getNumArgOperands(); i++) {
+                t = ci->getArgOperand(i);
+                arg = Var::UVar(t->getType()->getIntegerBitWidth(), getName(t));
+                s.args.push_back(arg);
+                this->use(arg);
+            }
+
+            this->result.push_back(s);
+        } else {
+            errs() << "No translation:" << *ci << "\n";
+        }
+
+    } else { // Calls other than tail call are ignored.
+        errs() << "No translation:" << *ci << "\n";
     }
 }

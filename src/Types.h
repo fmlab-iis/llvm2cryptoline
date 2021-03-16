@@ -52,6 +52,7 @@ enum class CryptoLineOps {
     Nondet,
     Cast,
     Vpc,
+    Call,
     // assume/assert
     Assume,
     Assert,
@@ -76,7 +77,9 @@ public:
     Argument(CryptoLineOps opcode, CryptoLineType t, unsigned w, std::string value);
 
     static Argument UConst(unsigned w, std::string val);
+    static Argument SConst(unsigned w, std::string val);
     static Argument UVar(unsigned w, std::string val);
+    static Argument SVar(unsigned w, std::string val);
     static Argument Flag(std::string val);
     static Argument Num(unsigned val);
 
@@ -117,7 +120,9 @@ public:
     }
 
     static Variable UVar(unsigned w, std::string name);
+    static Variable SVar(unsigned w, std::string name);
     static Variable UVar(unsigned w, std::string name, int index);
+    static Variable SVar(unsigned w, std::string name, int index);
     std::string toDecl() const;
 };
 
@@ -172,6 +177,7 @@ public:
     static Statement Nondet(Argument dst);
     static Statement Cast(Argument dst, Argument src);
     static Statement Vpc(Argument dst, Argument src);
+    static Statement Call(std::string fn);
     static Statement Assume(Predicate alg, Predicate range);
     static Statement Assert(Predicate alg, Predicate range);
 

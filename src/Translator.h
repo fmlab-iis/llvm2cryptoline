@@ -54,8 +54,10 @@ private:
     void evalInsertElement(InsertElementInst* iei);
     void evalExtractElement(ExtractElementInst* eei);
     void evalZExt(ZExtInst* zei);
+    void evalSExt(SExtInst* sei);
     void evalTrunc(TruncInst* ti);
     void evalBitCast(BitCastInst* bci);
+    void evalCall(CallInst* ci);
 
     void evalBinaryOpArithmetic(BinaryOperator* bo);
     void evalBinaryOpShl(BinaryOperator* bo);
