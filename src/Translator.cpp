@@ -294,8 +294,10 @@ void Translator::evalLoad(LoadInst* li) {
 
     if (type->isIntegerTy()) {
         width = type->getIntegerBitWidth();
-        Var dst = Var::UVar(width, getName(li));
-        Var src = this->pointerTable.getSymAddr(ad).toUVar(width);
+        Var dst = Var(this->defaultType, width, getName(li));
+        // Var dst = Var::UVar(width, getName(li));
+        Var src = this->pointerTable.getSymAddr(ad).toVariable(this->defaultType, width);
+        // Var src = this->pointerTable.getSymAddr(ad).toUVar(width);
 
         s = Statement::Mov(dst, src);
 
@@ -311,8 +313,10 @@ void Translator::evalLoad(LoadInst* li) {
         width = eleType->getIntegerBitWidth(); // assume the element type is integer
         Var dst, src;
         for (int i = 0; i < eleNum; i++) {
-            dst = Var::UVar(width, getName(li), i);
-            src = this->pointerTable.getSymAddr(ad).add(i*sizeOf(eleType)).toUVar(width);
+            // dst = Var::UVar(width, getName(li), i);
+            dst = Var(this->defaultType, width, getName(li), i);
+            // src = this->pointerTable.getSymAddr(ad).add(i*sizeOf(eleType)).toUVar(width);
+            src = this->pointerTable.getSymAddr(ad).add(i*sizeOf(eleType)).toVariable(this->defaultType, width);
 
             s = Statement::Mov(dst, src);
             this->result.push_back(s);
@@ -334,8 +338,10 @@ void Translator::evalStore(StoreInst* si) {
 
     if (type->isIntegerTy()) {
         width = type->getIntegerBitWidth();
-        Var dst = this->pointerTable.getSymAddr(ad).toUVar(width);
-        Var src = Var::UVar(width, getName(v));
+        //Var dst = this->pointerTable.getSymAddr(ad).toUVar(width);
+        Var dst = this->pointerTable.getSymAddr(ad).toVariable(this->defaultType, width);
+        //Var src = Var::UVar(width, getName(v));
+        Var src = Var(this->defaultType, width, getName(v));
 
         s = Statement::Mov(dst, src);
 
@@ -352,8 +358,10 @@ void Translator::evalStore(StoreInst* si) {
         Var dst, src;
 
         for (int i = 0; i < eleNum; i++) {
-            dst = this->pointerTable.getSymAddr(ad).add(i*sizeOf(eleType)).toUVar(width);
-            src = Var::UVar(width, getName(v), i);
+            //dst = this->pointerTable.getSymAddr(ad).add(i*sizeOf(eleType)).toUVar(width);
+            dst = this->pointerTable.getSymAddr(ad).add(i*sizeOf(eleType)).toVariable(this->defaultType, width);
+            // src = Var::UVar(width, getName(v), i);
+            src = Var(this->defaultType, width, getName(v), i);
 
             s = Statement::Mov(dst, src);
             this->result.push_back(s);
@@ -375,21 +383,30 @@ void Translator::evalBinaryOpArithmetic(BinaryOperator* bo) {
 
     if (type->isIntegerTy()) {
         width = type->getIntegerBitWidth();
-        Var dst = Var::UVar(width, getName(bo));
+        //Var dst = Var::UVar(width, getName(bo));
+        Var dst = Var(this->defaultType, width, getName(bo));
         Arg src1,src2;
 
         if (ConstantInt* c1 = llvm::dyn_cast<llvm::ConstantInt>(t1)) {
-            src1 = Arg::UConst(width, c1->getValue().toString(10, false));
+            if (this->defaultType == CryptoLineType::sint) {
+                src1 = Arg::SConst(width, c1->getValue().toString(10, true));
+            } else {
+                src1 = Arg::UConst(width, c1->getValue().toString(10, false));
+            }
         } else {
-            Var v = Var::UVar(width, getName(t1));
+            Var v = Var(this->defaultType, width, getName(t1));
             src1 = v;
             this->use(v);
         }
 
         if (ConstantInt* c2 = llvm::dyn_cast<llvm::ConstantInt>(t2)) {
-            src2 = Arg::UConst(width, c2->getValue().toString(10, false));
+            if (this->defaultType == CryptoLineType::sint) {
+                src2 = Arg::SConst(width, c2->getValue().toString(10, true));
+            } else {
+                src2 = Arg::UConst(width, c2->getValue().toString(10, false));
+            }
         } else {
-            Var v = Var::UVar(width, getName(t2));
+            Var v = Var(this->defaultType, width, getName(t2));
             src2 = v;
             this->use(v);
         }
@@ -431,22 +448,33 @@ void Translator::evalBinaryOpArithmetic(BinaryOperator* bo) {
         }
 
         for (int i = 0; i < eleNum; i++) {
-            dst = Var::UVar(width, getName(bo), i);
+            // dst = Var::UVar(width, getName(bo), i);
+            dst = Var(this->defaultType, width, getName(bo), i);
 
             if (t1isConstant) {
-                src1 = Arg::UConst(width,
-                                   ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(10, false));
+                if (this->defaultType == CryptoLineType::sint) {
+                    src1 = Arg::SConst(width,
+                                       ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(10, true));
+                } else {
+                    src1 = Arg::UConst(width,
+                                       ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(10, false));
+                }
             } else {
-                v1 = Var::UVar(width, getName(t1), i);
+                v1 = Var(this->defaultType, width, getName(t1), i);
                 src1 = v1;
                 this->use(v1);
             }
 
             if (t2isConstant) {
-                src2 = Arg::UConst(width,
-                                   ((ConstantInt*)(c2->getAggregateElement(i)))->getValue().toString(10, false));
+                if (this->defaultType == CryptoLineType::sint) {
+                    src2 = Arg::SConst(width,
+                                       ((ConstantInt*)(c2->getAggregateElement(i)))->getValue().toString(10, true));
+                } else {
+                    src2 = Arg::UConst(width,
+                                       ((ConstantInt*)(c2->getAggregateElement(i)))->getValue().toString(10, false));
+                }
             } else {
-                v2 = Var::UVar(width, getName(t2), i);
+                v2 = Var(this->defaultType, width, getName(t2), i);
                 src2 = v2;
                 this->use(v2);
             }
@@ -484,8 +512,10 @@ void Translator::evalBinaryOpShl(BinaryOperator* bo) {
 
         if (type->isIntegerTy()) {
             width = type->getIntegerBitWidth();
-            Var dst = Var::UVar(width, getName(bo));
-            Var src = Var::UVar(width, getName(t1));
+            // Var dst = Var::UVar(width, getName(bo));
+            Var dst = Var(this->defaultType, width, getName(bo));
+            // Var src = Var::UVar(width, getName(t1));
+            Var src = Var(this->defaultType, width, getName(t1));
 
             s = Statement::Shl(dst, src, Arg::Num(n));
             this->result.push_back(s);
@@ -686,13 +716,212 @@ void Translator::evalBinaryOpLShr(BinaryOperator* bo) {
         s = Statement::Comment("You may need to modify here");
         this->result.push_back(s);
 
-        Var dst = Var::UVar(width, getName(bo));
+        // Var dst = Var::UVar(width, getName(bo));
+        Var dst = Var(this->defaultType, width, getName(bo));
         Arg src1;
 
         if (ConstantInt* c1 = llvm::dyn_cast<llvm::ConstantInt>(t1)) {
-            src1 = Arg::UConst(width, "0x" + c1->getValue().toString(16, false));
+            if (this->defaultType == CryptoLineType::sint) {
+                src1 = Arg::SConst(width, "0x" + c1->getValue().toString(16, false));
+            } else {
+                src1 = Arg::UConst(width, "0x" + c1->getValue().toString(16, false));
+            }
         } else {
-            Var v = Var::UVar(width, getName(t1));
+            Var v = Var(this->defaultType, width, getName(t1));
+            src1 = v;
+            this->use(v);
+        }
+
+        s = Statement::Split(dst,
+                             Var(this->defaultType, width, "tmp_to_be_used"),
+                             src1,
+                             Arg::Num(n));
+        this->result.push_back(s);
+        this->define(dst);
+
+    } else { // the second argument is a variable!
+        // the shifted number cannot be a variable
+        errs() << "No translation:" << *bo
+               << "(non-supported argument!) \n";
+    }
+
+    /*
+    Statement s;
+    Value* t1 = bo->getOperand(0);
+    Value* t2 = bo->getOperand(1);
+    Type *type = bo->getType();
+
+    if (ConstantInt* c2 = llvm::dyn_cast<llvm::ConstantInt>(t2)) {
+
+        unsigned n = c2->getZExtValue();
+
+        if (type->isIntegerTy(128)) {
+
+            if (n >= 128) {
+                errs() << "No translation:" << *bo
+                       << "(lshr argument error!)\n";
+                return;
+            }
+
+            string dstL = getName(bo) + "_L";
+            string dstH = getName(bo) + "_H";
+            string srcL = getName(t1) + "_L";
+            string srcH = getName(t1) + "_H";
+
+            s = Statement::Comment("You may need to modify here");
+            this->result.push_back(s);
+
+            bool rule_lshr_0bit = false;
+            bool rule_lshr_64bit = false;
+            if (this->heuristcs_equiv) {
+                if (n == 64) {
+                    rule_lshr_64bit = true;
+                } else if (n == 0) {
+                    rule_lshr_0bit = true;
+                }
+            }
+
+            if (rule_lshr_0bit) {
+                // heuristcs
+                s = Statement::Comment("Heuristics applied.");
+                this->result.push_back(s);
+
+                s = Statement::Mov(Arg::Var(dstL),
+                                   Arg::Var(srcL));
+                this->result.push_back(s);
+
+                s = Statement::Mov(Arg::Var(dstH),
+                                   Arg::Var(srcH));
+                this->result.push_back(s);
+
+            } else if (rule_lshr_64bit) {
+                // heuristcs
+                s = Statement::Comment("Heuristics applied.");
+                this->result.push_back(s);
+
+                s = Statement::Mov(Arg::Var(dstL),
+                                   Arg::Var(srcH));
+                this->result.push_back(s);
+
+                s = Statement::Mov(Arg::Var(dstH),
+                                   Arg::Const("0"));
+                this->result.push_back(s);
+
+            } else if (n < 64) {
+                s = Statement::Split(Arg::Var("tmpL_h"),
+                                     Arg::Var("tmp_to_be_used"),
+                                     Arg::Var(srcL),
+                                     Arg::Num(n));
+                this->result.push_back(s);
+
+                s = Statement::Split(Arg::Var("tmpH_h"),
+                                     Arg::Var("tmpH_l"),
+                                     Arg::Var(srcH),
+                                     Arg::Num(n));
+                this->result.push_back(s);
+
+                s = Statement::Shl(Arg::Var("tmp"),
+                                   Arg::Var("tmpH_l"),
+                                   Arg::Num(64 - n));
+                this->result.push_back(s);
+
+                s = Statement::Add(Arg::Var(dstL),
+                                   Arg::Var("tmp"),
+                                   Arg::Var("tmpL_h"));
+                this->result.push_back(s);
+
+                s = Statement::Mov(Arg::Var(dstH),
+                                   Arg::Var("tmpH_h"));
+                this->result.push_back(s);
+
+            } else { // 64 < n < 128
+                s = Statement::Split(Arg::Var(dstL),
+                                     Arg::Var("tmp_to_be_used"),
+                                     Arg::Var(srcH),
+                                     Arg::Num(n - 64));
+                this->result.push_back(s);
+
+                s = Statement::Mov(Arg::Var(dstH),
+                                   Arg::Const("0"));
+                this->result.push_back(s);
+
+            }
+
+            // compute defined/undefined variables
+            this->checkDefinedness(srcL);
+            this->checkDefinedness(srcH);
+            this->defVars.insert(dstL);
+            this->defVars.insert(dstH);
+
+        } else if (type->isIntegerTy(64)) {
+
+            if (n >= 64) {
+                errs() << "No translation:" << *bo
+                       << "(lshr argument error!)\n";
+                return;
+            }
+
+            string dst = getName(bo);
+            string src = getName(t1);
+
+            s = Statement::Comment("You may need to modify here");
+            this->result.push_back(s);
+
+            bool rule_lshr_0bit = false;
+            if (this->heuristcs_equiv && n == 0) {
+                rule_lshr_0bit = true;
+            }
+
+            if (rule_lshr_0bit) {
+                // heuristcs
+                s = Statement::Comment("Heuristics applied.");
+                this->result.push_back(s);
+
+                s = Statement::Mov(Arg::Var(dst),
+                                   Arg::Var(src));
+                this->result.push_back(s);
+
+            } else {
+                s = Statement::Split(Arg::Var(dst),
+                                     Arg::Var("tmp_to_be_used"),
+                                     Arg::Var(src),
+                                     Arg::Num(n));
+                this->result.push_back(s);
+            }
+
+            // compute defined/undefined variables
+            this->checkDefinedness(src);
+            this->defVars.insert(dst);
+        }
+    } else {
+        // the shifted number cannot be a variable
+        errs() << "No translation:" << *bo << "\n";
+    }
+*/
+}
+
+void Translator::evalBinaryOpAShr(BinaryOperator* bo) {
+    Statement s;
+    Value* t1 = bo->getOperand(0);
+    Value* t2 = bo->getOperand(1);
+    Type *type = bo->getType();
+    unsigned width;
+
+    if (ConstantInt* c2 = llvm::dyn_cast<llvm::ConstantInt>(t2)) {
+        width = type->getIntegerBitWidth();
+        unsigned n = c2->getZExtValue();
+
+        s = Statement::Comment("You may need to modify here");
+        this->result.push_back(s);
+
+        // Var dst = Var::UVar(width, getName(bo));
+        Var dst = Var::SVar(width, getName(bo));
+        Arg src1;
+
+        if (ConstantInt* c1 = llvm::dyn_cast<llvm::ConstantInt>(t1)) {
+            src1 = Arg::SConst(width, "0x" + c1->getValue().toString(16, false));
+        } else {
+            Var v = Var::SVar(width, getName(t1));
             src1 = v;
             this->use(v);
         }
@@ -877,13 +1106,18 @@ void Translator::evalBinaryOpAnd(BinaryOperator* bo) {
 
     if (type->isIntegerTy()) {
         width = type->getIntegerBitWidth();
-        Var dst = Var::UVar(width, getName(bo));
+        // Var dst = Var::UVar(width, getName(bo));
+        Var dst = Var(this->defaultType, width, getName(bo));
         Arg src1,src2;
 
         if (ConstantInt* c1 = llvm::dyn_cast<llvm::ConstantInt>(t1)) {
-            src1 = Arg::UConst(width, "0x" + c1->getValue().toString(16, false));
+            if (this->defaultType == CryptoLineType::sint) {
+                src1 = Arg::SConst(width, "0x" + c1->getValue().toString(16, false));
+            } else {
+                src1 = Arg::UConst(width, "0x" + c1->getValue().toString(16, false));
+            }
         } else {
-            Var v = Var::UVar(width, getName(t1));
+            Var v = Var(this->defaultType, width, getName(t1));
             src1 = v;
             this->use(v);
         }
@@ -891,14 +1125,19 @@ void Translator::evalBinaryOpAnd(BinaryOperator* bo) {
         bool h_low64 = false; // heuristic: get low 64 bits
 
         if (ConstantInt* c2 = llvm::dyn_cast<llvm::ConstantInt>(t2)) {
-            src2 = Arg::UConst(width, "0x" + c2->getValue().toString(16, false));
+            if (this->defaultType == CryptoLineType::sint) {
+                src2 = Arg::SConst(width, "0x" + c2->getValue().toString(16, false));
+            } else {
+                src2 = Arg::UConst(width, "0x" + c2->getValue().toString(16, false));
+            }
 
             if (width == 128 && c2->getValue().countTrailingOnes() == 64
                     && c2->getValue().countLeadingZeros() == 64) {
                 h_low64 = true;
             }
         } else {
-            Var v = Var::UVar(width, getName(t2));
+            // Var v = Var::UVar(width, getName(t2));
+            Var v = Var(this->defaultType, width, getName(t2));
             src2 = v;
             this->use(v);
         }
@@ -939,13 +1178,20 @@ void Translator::evalBinaryOpAnd(BinaryOperator* bo) {
         }
 
         for (int i = 0; i < eleNum; i++) {
-            dst = Var::UVar(width, getName(bo), i);
+            // dst = Var::UVar(width, getName(bo), i);
+            dst = Var(this->defaultType, width, getName(bo), i);
 
             if (t1isConstant) {
-                src1 = Arg::UConst(width, "0x" +
-                                   ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(16, false));
+                if (this->defaultType == CryptoLineType::sint) {
+                    src1 = Arg::SConst(width, "0x" +
+                                       ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(16, false));
+                } else {
+                    src1 = Arg::UConst(width, "0x" +
+                                       ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(16, false));
+                }
             } else {
-                v1 = Var::UVar(width, getName(t1), i);
+                // v1 = Var::UVar(width, getName(t1), i);
+                v1 = Var(this->defaultType, width, getName(t1), i);
                 src1 = v1;
                 this->use(v1);
             }
@@ -1108,6 +1354,10 @@ void Translator::evalBinaryOp(BinaryOperator* bo) {
             evalBinaryOpLShr(bo);
             break;
 
+        case Instruction::BinaryOps::AShr:
+            evalBinaryOpAShr(bo);
+            break;
+
         case Instruction::BinaryOps::And:
             evalBinaryOpAnd(bo);
             break;
@@ -1181,18 +1431,24 @@ void Translator::evalInsertElement(InsertElementInst* iei) {
         Var dst;
         Arg src;
         for (int i = 0; i < eleNum; i++) {
-            dst = Var::UVar(width, getName(iei), i);
+            // dst = Var::UVar(width, getName(iei), i);
+            dst = Var(this->defaultType, width, getName(iei), i);
             if (i == index) {
                 if (ConstantInt* c2 = llvm::dyn_cast<llvm::ConstantInt>(t2)) {
-                    src = Arg::UConst(width, c2->getValue().toString(10, false));
+                    if (this->defaultType == CryptoLineType::sint) {
+                        src = Arg::SConst(width, c2->getValue().toString(10, true));
+                    } else {
+                        src = Arg::UConst(width, c2->getValue().toString(10, false));
+                    }
                 } else {
-                    Var v = Var::UVar(width, getName(t2));
+                    // Var v = Var::UVar(width, getName(t2));
+                    Var v = Var(this->defaultType, width, getName(t2));
                     src = v;
                     this->use(v);
                 }
                 s = Statement::Mov(dst, src);
             } else {
-                src = Var::UVar(width, "undef", i);
+                src = Var(this->defaultType, width, "undef", i);
                 s = Statement::Nondet(src);
                 this->result.push_back(s);
                 s = Statement::Mov(dst, src);
@@ -1204,18 +1460,23 @@ void Translator::evalInsertElement(InsertElementInst* iei) {
         Var dst;
         Arg src;
         for (int i = 0; i < eleNum; i++) {
-            dst = Var::UVar(width, getName(iei), i);
+            // dst = Var::UVar(width, getName(iei), i);
+            dst = Var(this->defaultType, width, getName(iei), i);
             if (i == index) {
                 if (ConstantInt* c2 = llvm::dyn_cast<llvm::ConstantInt>(t2)) {
-                    src = Arg::UConst(width, c2->getValue().toString(10, false));
+                    if (this->defaultType == CryptoLineType::sint) {
+                        src = Arg::SConst(width, c2->getValue().toString(10, true));
+                    } else {
+                        src = Arg::UConst(width, c2->getValue().toString(10, false));
+                    }
                 } else {
-                    Var v = Var::UVar(width, getName(t2));
+                    Var v = Var(this->defaultType, width, getName(t2));
                     src = v;
                     this->use(v);
                 }
                 s = Statement::Mov(dst, src);
             } else {
-                Var v = Var::UVar(width, getName(t1), i);
+                Var v = Var(this->defaultType, width, getName(t1), i);
                 src = v;
                 this->use(v);
                 s = Statement::Mov(dst, src);
@@ -1290,8 +1551,10 @@ void Translator::evalExtractElement(ExtractElementInst* eei) {
     Type *eleType = eei->getType();
     unsigned width = eleType->getIntegerBitWidth();
 
-    Var dst = Var::UVar(width, getName(eei));
-    Var src = Var::UVar(width, getName(t1), index);
+    // Var dst = Var::UVar(width, getName(eei));
+    Var dst = Var(this->defaultType, width, getName(eei));
+    // Var src = Var::UVar(width, getName(t1), index);
+    Var src = Var(this->defaultType, width, getName(t1), index);
     s = Statement::Mov(dst, src);
     this->result.push_back(s);
     this->use(src);
@@ -1426,18 +1689,22 @@ void Translator::evalTrunc(TruncInst* ti) {
 
         Arg src;
         if (ConstantInt* c1 = llvm::dyn_cast<llvm::ConstantInt>(t1)) {
-            src = Arg::UConst(srcWidth, c1->getValue().toString(10, false));
+            if (this->defaultType == CryptoLineType::sint) {
+                src = Arg::SConst(srcWidth, c1->getValue().toString(10, true));
+            } else {
+                src = Arg::UConst(srcWidth, c1->getValue().toString(10, false));
+            }
         } else {
-            Var v = Var::UVar(srcWidth, getName(t1));
+            Var v = Var(this->defaultType, srcWidth, getName(t1));
             src = v;
             this->use(v);
         }
 
         Var dstTmp = Var::UVar(srcWidth, getName(ti));
-        Statement s = Statement::Split(Var::UVar(srcWidth, "tmp_" + getName(t1)),
+        Statement s = Statement::Split(Var(this->defaultType, srcWidth, "tmp_" + getName(t1)),
                                        dstTmp, src, Arg::Num(dstWidth));
         this->result.push_back(s);
-        Var dst = Var::UVar(dstWidth, getName(ti));
+        Var dst = Var(this->defaultType, dstWidth, getName(ti));
         s = Statement::Vpc(dst, dstTmp);
         this->result.push_back(s);
         this->define(dst);
@@ -1458,19 +1725,24 @@ void Translator::evalTrunc(TruncInst* ti) {
 
         for (int i = 0; i < eleNum; i++) {
             dstTmp = Var::UVar(srcWidth, getName(ti), i);
-            dst = Var::UVar(dstWidth, getName(ti), i);
+            dst = Var(this->defaultType, dstWidth, getName(ti), i);
 
             if (t1isConstant) {
-                src = Arg::UConst(srcWidth,
-                                  ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(10, false));
+                if (this->defaultType == CryptoLineType::sint) {
+                    src = Arg::SConst(srcWidth,
+                                      ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(10, true));
+                } else {
+                    src = Arg::UConst(srcWidth,
+                                      ((ConstantInt*)(c1->getAggregateElement(i)))->getValue().toString(10, false));
+                }
             } else {
-                v = Var::UVar(srcWidth, getName(t1), i);
+                v = Var(this->defaultType, srcWidth, getName(t1), i);
                 src = v;
                 this->use(v);
             }
 
-            s = Statement::Split(Var::UVar(srcWidth, "tmp_" + getName(t1), i),
-                                           dstTmp, src, Arg::Num(dstWidth));
+            s = Statement::Split(Var(this->defaultType, srcWidth, "tmp_" + getName(t1), i),
+                                 dstTmp, src, Arg::Num(dstWidth));
             this->result.push_back(s);
             s = Statement::Vpc(dst, src);
             this->result.push_back(s);
@@ -1530,7 +1802,7 @@ void Translator::evalCall(CallInst* ci) {
             Var arg;
             for (int i = 0; i < ci->getNumArgOperands(); i++) {
                 t = ci->getArgOperand(i);
-                arg = Var::UVar(t->getType()->getIntegerBitWidth(), getName(t));
+                arg = Var(this->defaultType, t->getType()->getIntegerBitWidth(), getName(t));
                 s.args.push_back(arg);
                 this->use(arg);
             }

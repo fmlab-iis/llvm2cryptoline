@@ -90,6 +90,10 @@ Argument Argument::SConst(unsigned w, std::string val) {
     return Argument(CryptoLineOps::Const, CryptoLineType::sint, w, val);
 }
 
+Argument Argument::Var(CryptoLineType t, unsigned w, std::string val) {
+    return Argument(CryptoLineOps::Var, t, w, val);
+}
+
 Argument Argument::UVar(unsigned w, std::string val) {
     return Argument(CryptoLineOps::Var, CryptoLineType::uint, w, val);
 }
@@ -139,7 +143,7 @@ std::string Argument::toSrc() {
         s = this->val;
         break;
     case CryptoLineOps::Const:
-        s = this->val + "@" + this->getType();
+        s = "(" + this->val + ")@" + this->getType();
         break;
     default:
         s = "NULL";
@@ -187,8 +191,10 @@ std::string Argument::toTypedStr() {
         break;
     case CryptoLineOps::Var:
     case CryptoLineOps::Flag:
-    case CryptoLineOps::Const:
         s = this->val + "@" + this->getType();
+        break;
+    case CryptoLineOps::Const:
+        s = "(" + this->val + ")@" + this->getType();
         break;
     default:
         s = "NULL";

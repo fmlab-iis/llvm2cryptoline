@@ -78,6 +78,7 @@ public:
 
     static Argument UConst(unsigned w, std::string val);
     static Argument SConst(unsigned w, std::string val);
+    static Argument Var(CryptoLineType t, unsigned w, std::string val);
     static Argument UVar(unsigned w, std::string val);
     static Argument SVar(unsigned w, std::string val);
     static Argument Flag(std::string val);

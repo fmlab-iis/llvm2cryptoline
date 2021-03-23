@@ -46,6 +46,7 @@ public:
 private:
     std::string replaceChar(std::string str, char target, char c);
     bool legacy = false;
+    CryptoLineType defaultType = CryptoLineType::sint;
 
     void evalLoad(LoadInst* li);
     void evalStore(StoreInst* si);
@@ -62,6 +63,7 @@ private:
     void evalBinaryOpArithmetic(BinaryOperator* bo);
     void evalBinaryOpShl(BinaryOperator* bo);
     void evalBinaryOpLShr(BinaryOperator* bo);
+    void evalBinaryOpAShr(BinaryOperator* bo);
     void evalBinaryOpAnd(BinaryOperator* bo);
 };
 
