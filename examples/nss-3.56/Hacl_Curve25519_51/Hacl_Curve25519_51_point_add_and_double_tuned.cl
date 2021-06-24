@@ -2069,19 +2069,17 @@ mov Z5_4 mem0_152;
 {
   (* (let p2, p3 = P.add_and_double (fget_xz h0 q) (fget_xz h0 nq) (fget_xz h0 nq_p1) in
      fget_xz h1 nq == p2 /\ fget_xz h1 nq_p1 == p3) *)
-(*
+
   and [
-*)
+
     (* condition 1 *)
-(*
     eqmod
       (limbs 51 [X4_0, X4_1, X4_2, X4_3, X4_4])
       (sq (sub (sq (limbs 51 [X2_0, X2_1, X2_2, X2_3, X2_4]))
                (sq (limbs 51 [Z2_0, Z2_1, Z2_2, Z2_3, Z2_4]))))
       (2**255 - 19),
-*)
+
     (* condition 2 *)
-(*
     eqmod
       (limbs 51 [Z4_0, Z4_1, Z4_2, Z4_3, Z4_4])
       (mul [
@@ -2095,9 +2093,8 @@ mov Z5_4 mem0_152;
                sq (limbs 51 [Z2_0, Z2_1, Z2_2, Z2_3, Z2_4]) ]
        ])
       (2**255 - 19),
-*)
+
     (* condition 3-1 *)
-(*
     eqmod
       (limbs 51 [X5_0, X5_1, X5_2, X5_3, X5_4])
       (mul 4 (sq (sub 
@@ -2106,9 +2103,8 @@ mov Z5_4 mem0_152;
                     (mul (limbs 51 [Z2_0, Z2_1, Z2_2, Z2_3, Z2_4])
 		         (limbs 51 [Z3_0, Z3_1, Z3_2, Z3_3, Z3_4])))))
       (2**255 - 19),
-*)
+
     (* condition 3-2 *)
-(*
     eqmod
       (limbs 51 [Z5_0, Z5_1, Z5_2, Z5_3, Z5_4])
       (mul 4 (mul (limbs 51 [X1_0, X1_1, X1_2, X1_3, X1_4])
@@ -2117,9 +2113,8 @@ mov Z5_4 mem0_152;
                            (mul (limbs 51 [X2_0, X2_1, X2_2, X2_3, X2_4])
 			        (limbs 51 [Z3_0, Z3_1, Z3_2, Z3_3, Z3_4]))))))
       (2**255 - 19),
-*)
-    (* condition 3 *)
 
+    (* condition 3 *)
     eqmod
       (mul (limbs 51 [X5_0, X5_1, X5_2, X5_3, X5_4])
            (mul (limbs 51 [X1_0, X1_1, X1_2, X1_3, X1_4])
@@ -2133,9 +2128,8 @@ mov Z5_4 mem0_152;
                     (mul (limbs 51 [Z2_0, Z2_1, Z2_2, Z2_3, Z2_4])
                          (limbs 51 [Z3_0, Z3_1, Z3_2, Z3_3, Z3_4])))))
       (2**255 - 19)
-(*
+
   ] 
-*)
   &&
   and [
   	(* state_inv_t h1 (get_x nq) /\ state_inv_t h1 (get_z nq) *)
