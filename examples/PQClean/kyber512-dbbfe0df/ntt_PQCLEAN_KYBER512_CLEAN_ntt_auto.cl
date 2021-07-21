@@ -1,30 +1,15 @@
-(* quine:  -jobs 20 -v -isafety -no_carry_constraint -slicing ntt_PQCLEAN_KYBER512_CLEAN_ntt_auto.cl
-Parsing Cryptoline file:                [OK]            3.393741 seconds
-Checking well-formedness:               [OK]            0.038884 seconds
-Transforming to SSA form:               [OK]            0.117884 seconds
-Rewriting assignments:                  [OK]            94.426038 seconds
-Verifying program safety:               [OK]            418.147092 seconds
-Verifying range assertions:             [OK]            276.286843 seconds
-Verifying range specification:          [OK]            532.396768 seconds
-Rewriting value-preserved casting:      [OK]            0.000518 seconds
-Verifying algebraic assertions:         [OK]            5.489631 seconds
-Verifying algebraic specification:      [OK]            106882.697250 seconds
-Verification result:                    [OK]            108213.015274 seconds
-*)
-
-
-(* quine:  -jobs 20 -v -isafety -no_carry_constraint ntt_PQCLEAN_KYBER512_CLEAN_ntt_auto.cl
-Parsing Cryptoline file:                [OK]            3.504136 seconds
-Checking well-formedness:               [OK]            0.042379 seconds
-Transforming to SSA form:               [OK]            0.117892 seconds
-Rewriting assignments:                  [OK]            94.779155 seconds
-Verifying program safety:               [OK]            431.899921 seconds
-Verifying range assertions:             [OK]            285.711308 seconds
-Verifying range specification:          [OK]            561.542956 seconds
-Rewriting value-preserved casting:      [OK]            0.000387 seconds
-Verifying algebraic assertions:         [OK]            3.937839 seconds
-Verifying algebraic specification:      [OK]            169608.207533 seconds
-Verification result:                    [OK]            170989.765709 seconds
+(* quine: -v -isafety -jobs 16 -no_carry_constraint -slicing ntt_PQCLEAN_KYBER512_CLEAN_ntt_auto.cl
+Parsing Cryptoline file:                [OK]            4.384880 seconds
+Checking well-formedness:               [OK]            0.048862 seconds
+Transforming to SSA form:               [OK]            0.149796 seconds
+Rewriting assignments:                  [OK]            109.958373 seconds
+Verifying program safety:               [OK]            328.761871 seconds
+Verifying range assertions:             [OK]            233.618574 seconds
+Verifying range specification:          [OK]            476.341644 seconds
+Rewriting value-preserved casting:      [OK]            0.000994 seconds
+Verifying algebraic assertions:         [OK]            1.292216 seconds
+Verifying algebraic specification:      [OK]            111.266753 seconds
+Verification result:                    [OK]            1265.853208 seconds
 *)
 
 (* R = 2**16, q = 3329, invq = 62209 *)
@@ -277,7 +262,7 @@ proc main (  sint16 a_0,   sint16 a_2,   sint16 a_4,   sint16 a_6,
 }
 
 ghost input_polynomial@bit, x@bit :
-      input_polynomial =
+      input_polynomial * input_polynomial =
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -3888,7 +3873,7 @@ add v_add21_127 v255 v_call_i_127;
 (*   store i16 %add21.127, i16* %arrayidx11.127, align 2, !tbaa !3 *)
 mov mem0_254 v_add21_127;
 
-cut and [ input_polynomial = 
+cut and [ input_polynomial * input_polynomial = 
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -3955,7 +3940,7 @@ a_496 * x**248 + a_498 * x**249 + a_500 * x**250 + a_502 * x**251 +
 a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255
 ,
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_0*(x**0) + mem0_2*(x**1) + mem0_4*(x**2) + mem0_6*(x**3) + 
 mem0_8*(x**4) + mem0_10*(x**5) + mem0_12*(x**6) + mem0_14*(x**7) + 
@@ -3992,7 +3977,7 @@ mem0_248*(x**124) + mem0_250*(x**125) + mem0_252*(x**126) + mem0_254*(x**127)
 )
 [3329, x**128 - 1729],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_256*(x**0) + mem0_258*(x**1) + mem0_260*(x**2) + mem0_262*(x**3) + 
 mem0_264*(x**4) + mem0_266*(x**5) + mem0_268*(x**6) + mem0_270*(x**7) + 
@@ -6853,7 +6838,7 @@ add v_add21_1_63_1 v511 v_call_i_1_63_1;
 mov mem0_382 v_add21_1_63_1;
 
 
-cut and [ input_polynomial = 
+cut and [ input_polynomial * input_polynomial = 
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -6920,7 +6905,7 @@ a_496 * x**248 + a_498 * x**249 + a_500 * x**250 + a_502 * x**251 +
 a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255
 ,
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_0*(x**0) + mem0_2*(x**1) + mem0_4*(x**2) + mem0_6*(x**3) + 
 mem0_8*(x**4) + mem0_10*(x**5) + mem0_12*(x**6) + mem0_14*(x**7) + 
@@ -6941,7 +6926,7 @@ mem0_120*(x**60) + mem0_122*(x**61) + mem0_124*(x**62) + mem0_126*(x**63)
 )
 [3329, x**64 - 2580],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_128*(x**0) + mem0_130*(x**1) + mem0_132*(x**2) + mem0_134*(x**3) + 
 mem0_136*(x**4) + mem0_138*(x**5) + mem0_140*(x**6) + mem0_142*(x**7) + 
@@ -6962,7 +6947,7 @@ mem0_248*(x**60) + mem0_250*(x**61) + mem0_252*(x**62) + mem0_254*(x**63)
 )
 [3329, x**64 - 749],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_256*(x**0) + mem0_258*(x**1) + mem0_260*(x**2) + mem0_262*(x**3) + 
 mem0_264*(x**4) + mem0_266*(x**5) + mem0_268*(x**6) + mem0_270*(x**7) + 
@@ -6983,7 +6968,7 @@ mem0_376*(x**60) + mem0_378*(x**61) + mem0_380*(x**62) + mem0_382*(x**63)
 )
 [3329, x**64 - 3289],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_384*(x**0) + mem0_386*(x**1) + mem0_388*(x**2) + mem0_390*(x**3) + 
 mem0_392*(x**4) + mem0_394*(x**5) + mem0_396*(x**6) + mem0_398*(x**7) + 
@@ -9834,7 +9819,7 @@ add v_add21_2_31_3 v767 v_call_i_2_31_3;
 (*   store i16 %add21.2.31.3, i16* %arrayidx11.2.31.3, align 2, !tbaa !3 *)
 mov mem0_446 v_add21_2_31_3;
 
-cut and [ input_polynomial = 
+cut and [ input_polynomial * input_polynomial = 
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -9901,7 +9886,7 @@ a_496 * x**248 + a_498 * x**249 + a_500 * x**250 + a_502 * x**251 +
 a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255
 ,
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_0*(x**0) + mem0_2*(x**1) + mem0_4*(x**2) + mem0_6*(x**3) + 
 mem0_8*(x**4) + mem0_10*(x**5) + mem0_12*(x**6) + mem0_14*(x**7) + 
@@ -9914,7 +9899,7 @@ mem0_56*(x**28) + mem0_58*(x**29) + mem0_60*(x**30) + mem0_62*(x**31)
 )
 [3329, x**32 - 2642],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_64*(x**0) + mem0_66*(x**1) + mem0_68*(x**2) + mem0_70*(x**3) + 
 mem0_72*(x**4) + mem0_74*(x**5) + mem0_76*(x**6) + mem0_78*(x**7) + 
@@ -9927,7 +9912,7 @@ mem0_120*(x**28) + mem0_122*(x**29) + mem0_124*(x**30) + mem0_126*(x**31)
 )
 [3329, x**32 - 687],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_128*(x**0) + mem0_130*(x**1) + mem0_132*(x**2) + mem0_134*(x**3) + 
 mem0_136*(x**4) + mem0_138*(x**5) + mem0_140*(x**6) + mem0_142*(x**7) + 
@@ -9940,7 +9925,7 @@ mem0_184*(x**28) + mem0_186*(x**29) + mem0_188*(x**30) + mem0_190*(x**31)
 )
 [3329, x**32 - 630],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_192*(x**0) + mem0_194*(x**1) + mem0_196*(x**2) + mem0_198*(x**3) + 
 mem0_200*(x**4) + mem0_202*(x**5) + mem0_204*(x**6) + mem0_206*(x**7) + 
@@ -9953,7 +9938,7 @@ mem0_248*(x**28) + mem0_250*(x**29) + mem0_252*(x**30) + mem0_254*(x**31)
 )
 [3329, x**32 - 2699],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_256*(x**0) + mem0_258*(x**1) + mem0_260*(x**2) + mem0_262*(x**3) + 
 mem0_264*(x**4) + mem0_266*(x**5) + mem0_268*(x**6) + mem0_270*(x**7) + 
@@ -9966,7 +9951,7 @@ mem0_312*(x**28) + mem0_314*(x**29) + mem0_316*(x**30) + mem0_318*(x**31)
 )
 [3329, x**32 - 1897],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_320*(x**0) + mem0_322*(x**1) + mem0_324*(x**2) + mem0_326*(x**3) + 
 mem0_328*(x**4) + mem0_330*(x**5) + mem0_332*(x**6) + mem0_334*(x**7) + 
@@ -9979,7 +9964,7 @@ mem0_376*(x**28) + mem0_378*(x**29) + mem0_380*(x**30) + mem0_382*(x**31)
 )
 [3329, x**32 - 1432],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_384*(x**0) + mem0_386*(x**1) + mem0_388*(x**2) + mem0_390*(x**3) + 
 mem0_392*(x**4) + mem0_394*(x**5) + mem0_396*(x**6) + mem0_398*(x**7) + 
@@ -9992,7 +9977,7 @@ mem0_440*(x**28) + mem0_442*(x**29) + mem0_444*(x**30) + mem0_446*(x**31)
 )
 [3329, x**32 - 848],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_448*(x**0) + mem0_450*(x**1) + mem0_452*(x**2) + mem0_454*(x**3) + 
 mem0_456*(x**4) + mem0_458*(x**5) + mem0_460*(x**6) + mem0_462*(x**7) + 
@@ -12847,7 +12832,7 @@ add v_add21_3_15_7 v1023 v_call_i_3_15_7;
 (*   store i16 %add21.3.15.7, i16* %arrayidx11.3.15.7, align 2, !tbaa !3 *)
 mov mem0_478 v_add21_3_15_7;
 
-cut and [ input_polynomial = 
+cut and [ input_polynomial * input_polynomial = 
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -12914,7 +12899,7 @@ a_496 * x**248 + a_498 * x**249 + a_500 * x**250 + a_502 * x**251 +
 a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255
 ,
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_0*(x**0) + mem0_2*(x**1) + mem0_4*(x**2) + mem0_6*(x**3) + 
 mem0_8*(x**4) + mem0_10*(x**5) + mem0_12*(x**6) + mem0_14*(x**7) + 
@@ -12923,7 +12908,7 @@ mem0_24*(x**12) + mem0_26*(x**13) + mem0_28*(x**14) + mem0_30*(x**15)
 )
 [3329, x**16 - 1062],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_32*(x**0) + mem0_34*(x**1) + mem0_36*(x**2) + mem0_38*(x**3) + 
 mem0_40*(x**4) + mem0_42*(x**5) + mem0_44*(x**6) + mem0_46*(x**7) + 
@@ -12932,7 +12917,7 @@ mem0_56*(x**12) + mem0_58*(x**13) + mem0_60*(x**14) + mem0_62*(x**15)
 )
 [3329, x**16 - 2267],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_64*(x**0) + mem0_66*(x**1) + mem0_68*(x**2) + mem0_70*(x**3) + 
 mem0_72*(x**4) + mem0_74*(x**5) + mem0_76*(x**6) + mem0_78*(x**7) + 
@@ -12941,7 +12926,7 @@ mem0_88*(x**12) + mem0_90*(x**13) + mem0_92*(x**14) + mem0_94*(x**15)
 )
 [3329, x**16 - 1919],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_96*(x**0) + mem0_98*(x**1) + mem0_100*(x**2) + mem0_102*(x**3) + 
 mem0_104*(x**4) + mem0_106*(x**5) + mem0_108*(x**6) + mem0_110*(x**7) + 
@@ -12950,7 +12935,7 @@ mem0_120*(x**12) + mem0_122*(x**13) + mem0_124*(x**14) + mem0_126*(x**15)
 )
 [3329, x**16 - 1410],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_128*(x**0) + mem0_130*(x**1) + mem0_132*(x**2) + mem0_134*(x**3) + 
 mem0_136*(x**4) + mem0_138*(x**5) + mem0_140*(x**6) + mem0_142*(x**7) + 
@@ -12959,7 +12944,7 @@ mem0_152*(x**12) + mem0_154*(x**13) + mem0_156*(x**14) + mem0_158*(x**15)
 )
 [3329, x**16 - 193],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_160*(x**0) + mem0_162*(x**1) + mem0_164*(x**2) + mem0_166*(x**3) + 
 mem0_168*(x**4) + mem0_170*(x**5) + mem0_172*(x**6) + mem0_174*(x**7) + 
@@ -12968,7 +12953,7 @@ mem0_184*(x**12) + mem0_186*(x**13) + mem0_188*(x**14) + mem0_190*(x**15)
 )
 [3329, x**16 - 3136],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_192*(x**0) + mem0_194*(x**1) + mem0_196*(x**2) + mem0_198*(x**3) + 
 mem0_200*(x**4) + mem0_202*(x**5) + mem0_204*(x**6) + mem0_206*(x**7) + 
@@ -12977,7 +12962,7 @@ mem0_216*(x**12) + mem0_218*(x**13) + mem0_220*(x**14) + mem0_222*(x**15)
 )
 [3329, x**16 - 797],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_224*(x**0) + mem0_226*(x**1) + mem0_228*(x**2) + mem0_230*(x**3) + 
 mem0_232*(x**4) + mem0_234*(x**5) + mem0_236*(x**6) + mem0_238*(x**7) + 
@@ -12986,7 +12971,7 @@ mem0_248*(x**12) + mem0_250*(x**13) + mem0_252*(x**14) + mem0_254*(x**15)
 )
 [3329, x**16 - 2532],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_256*(x**0) + mem0_258*(x**1) + mem0_260*(x**2) + mem0_262*(x**3) + 
 mem0_264*(x**4) + mem0_266*(x**5) + mem0_268*(x**6) + mem0_270*(x**7) + 
@@ -12995,7 +12980,7 @@ mem0_280*(x**12) + mem0_282*(x**13) + mem0_284*(x**14) + mem0_286*(x**15)
 )
 [3329, x**16 - 2786],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_288*(x**0) + mem0_290*(x**1) + mem0_292*(x**2) + mem0_294*(x**3) + 
 mem0_296*(x**4) + mem0_298*(x**5) + mem0_300*(x**6) + mem0_302*(x**7) + 
@@ -13004,7 +12989,7 @@ mem0_312*(x**12) + mem0_314*(x**13) + mem0_316*(x**14) + mem0_318*(x**15)
 )
 [3329, x**16 - 543],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_320*(x**0) + mem0_322*(x**1) + mem0_324*(x**2) + mem0_326*(x**3) + 
 mem0_328*(x**4) + mem0_330*(x**5) + mem0_332*(x**6) + mem0_334*(x**7) + 
@@ -13013,7 +12998,7 @@ mem0_344*(x**12) + mem0_346*(x**13) + mem0_348*(x**14) + mem0_350*(x**15)
 )
 [3329, x**16 - 3260],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_352*(x**0) + mem0_354*(x**1) + mem0_356*(x**2) + mem0_358*(x**3) + 
 mem0_360*(x**4) + mem0_362*(x**5) + mem0_364*(x**6) + mem0_366*(x**7) + 
@@ -13022,7 +13007,7 @@ mem0_376*(x**12) + mem0_378*(x**13) + mem0_380*(x**14) + mem0_382*(x**15)
 )
 [3329, x**16 - 69],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_384*(x**0) + mem0_386*(x**1) + mem0_388*(x**2) + mem0_390*(x**3) + 
 mem0_392*(x**4) + mem0_394*(x**5) + mem0_396*(x**6) + mem0_398*(x**7) + 
@@ -13031,7 +13016,7 @@ mem0_408*(x**12) + mem0_410*(x**13) + mem0_412*(x**14) + mem0_414*(x**15)
 )
 [3329, x**16 - 569],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_416*(x**0) + mem0_418*(x**1) + mem0_420*(x**2) + mem0_422*(x**3) + 
 mem0_424*(x**4) + mem0_426*(x**5) + mem0_428*(x**6) + mem0_430*(x**7) + 
@@ -13040,7 +13025,7 @@ mem0_440*(x**12) + mem0_442*(x**13) + mem0_444*(x**14) + mem0_446*(x**15)
 )
 [3329, x**16 - 2760],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_448*(x**0) + mem0_450*(x**1) + mem0_452*(x**2) + mem0_454*(x**3) + 
 mem0_456*(x**4) + mem0_458*(x**5) + mem0_460*(x**6) + mem0_462*(x**7) + 
@@ -13049,7 +13034,7 @@ mem0_472*(x**12) + mem0_474*(x**13) + mem0_476*(x**14) + mem0_478*(x**15)
 )
 [3329, x**16 - 1746],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_480*(x**0) + mem0_482*(x**1) + mem0_484*(x**2) + mem0_486*(x**3) + 
 mem0_488*(x**4) + mem0_490*(x**5) + mem0_492*(x**6) + mem0_494*(x**7) + 
@@ -16035,7 +16020,7 @@ a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255))
              Z_q[x]/( x**8 - zeta**124) * Z_q[x]/(x** 8 - zeta**252)
 *)
 
-cut and [ input_polynomial = 
+cut and [ input_polynomial * input_polynomial = 
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -16102,224 +16087,224 @@ a_496 * x**248 + a_498 * x**249 + a_500 * x**250 + a_502 * x**251 +
 a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255
 ,
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_0*(x**0) + mem0_2*(x**1) + mem0_4*(x**2) + mem0_6*(x**3) + 
 mem0_8*(x**4) + mem0_10*(x**5) + mem0_12*(x**6) + mem0_14*(x**7)
 )
 [3329, x**8 - 296],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_16*(x**0) + mem0_18*(x**1) + mem0_20*(x**2) + mem0_22*(x**3) + 
 mem0_24*(x**4) + mem0_26*(x**5) + mem0_28*(x**6) + mem0_30*(x**7)
 )
 [3329, x**8 - 3033],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_32*(x**0) + mem0_34*(x**1) + mem0_36*(x**2) + mem0_38*(x**3) + 
 mem0_40*(x**4) + mem0_42*(x**5) + mem0_44*(x**6) + mem0_46*(x**7)
 )
 [3329, x**8 - 2447],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_48*(x**0) + mem0_50*(x**1) + mem0_52*(x**2) + mem0_54*(x**3) + 
 mem0_56*(x**4) + mem0_58*(x**5) + mem0_60*(x**6) + mem0_62*(x**7)
 )
 [3329, x**8 - 882],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_64*(x**0) + mem0_66*(x**1) + mem0_68*(x**2) + mem0_70*(x**3) + 
 mem0_72*(x**4) + mem0_74*(x**5) + mem0_76*(x**6) + mem0_78*(x**7)
 )
 [3329, x**8 - 1339],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_80*(x**0) + mem0_82*(x**1) + mem0_84*(x**2) + mem0_86*(x**3) + 
 mem0_88*(x**4) + mem0_90*(x**5) + mem0_92*(x**6) + mem0_94*(x**7)
 )
 [3329, x**8 - 1990],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_96*(x**0) + mem0_98*(x**1) + mem0_100*(x**2) + mem0_102*(x**3) + 
 mem0_104*(x**4) + mem0_106*(x**5) + mem0_108*(x**6) + mem0_110*(x**7)
 )
 [3329, x**8 - 1476],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_112*(x**0) + mem0_114*(x**1) + mem0_116*(x**2) + mem0_118*(x**3) + 
 mem0_120*(x**4) + mem0_122*(x**5) + mem0_124*(x**6) + mem0_126*(x**7)
 )
 [3329, x**8 - 1853],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_128*(x**0) + mem0_130*(x**1) + mem0_132*(x**2) + mem0_134*(x**3) + 
 mem0_136*(x**4) + mem0_138*(x**5) + mem0_140*(x**6) + mem0_142*(x**7)
 )
 [3329, x**8 - 3046],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_144*(x**0) + mem0_146*(x**1) + mem0_148*(x**2) + mem0_150*(x**3) + 
 mem0_152*(x**4) + mem0_154*(x**5) + mem0_156*(x**6) + mem0_158*(x**7)
 )
 [3329, x**8 - 283],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_160*(x**0) + mem0_162*(x**1) + mem0_164*(x**2) + mem0_166*(x**3) + 
 mem0_168*(x**4) + mem0_170*(x**5) + mem0_172*(x**6) + mem0_174*(x**7)
 )
 [3329, x**8 - 56],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_176*(x**0) + mem0_178*(x**1) + mem0_180*(x**2) + mem0_182*(x**3) + 
 mem0_184*(x**4) + mem0_186*(x**5) + mem0_188*(x**6) + mem0_190*(x**7)
 )
 [3329, x**8 - 3273],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_192*(x**0) + mem0_194*(x**1) + mem0_196*(x**2) + mem0_198*(x**3) + 
 mem0_200*(x**4) + mem0_202*(x**5) + mem0_204*(x**6) + mem0_206*(x**7)
 )
 [3329, x**8 - 2240],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_208*(x**0) + mem0_210*(x**1) + mem0_212*(x**2) + mem0_214*(x**3) + 
 mem0_216*(x**4) + mem0_218*(x**5) + mem0_220*(x**6) + mem0_222*(x**7)
 )
 [3329, x**8 - 1089],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_224*(x**0) + mem0_226*(x**1) + mem0_228*(x**2) + mem0_230*(x**3) + 
 mem0_232*(x**4) + mem0_234*(x**5) + mem0_236*(x**6) + mem0_238*(x**7)
 )
 [3329, x**8 - 1333],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_240*(x**0) + mem0_242*(x**1) + mem0_244*(x**2) + mem0_246*(x**3) + 
 mem0_248*(x**4) + mem0_250*(x**5) + mem0_252*(x**6) + mem0_254*(x**7)
 )
 [3329, x**8 - 1996],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_256*(x**0) + mem0_258*(x**1) + mem0_260*(x**2) + mem0_262*(x**3) + 
 mem0_264*(x**4) + mem0_266*(x**5) + mem0_268*(x**6) + mem0_270*(x**7)
 )
 [3329, x**8 - 1426],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_272*(x**0) + mem0_274*(x**1) + mem0_276*(x**2) + mem0_278*(x**3) + 
 mem0_280*(x**4) + mem0_282*(x**5) + mem0_284*(x**6) + mem0_286*(x**7)
 )
 [3329, x**8 - 1903],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_288*(x**0) + mem0_290*(x**1) + mem0_292*(x**2) + mem0_294*(x**3) + 
 mem0_296*(x**4) + mem0_298*(x**5) + mem0_300*(x**6) + mem0_302*(x**7)
 )
 [3329, x**8 - 2094],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_304*(x**0) + mem0_306*(x**1) + mem0_308*(x**2) + mem0_310*(x**3) + 
 mem0_312*(x**4) + mem0_314*(x**5) + mem0_316*(x**6) + mem0_318*(x**7)
 )
 [3329, x**8 - 1235],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_320*(x**0) + mem0_322*(x**1) + mem0_324*(x**2) + mem0_326*(x**3) + 
 mem0_328*(x**4) + mem0_330*(x**5) + mem0_332*(x**6) + mem0_334*(x**7)
 )
 [3329, x**8 - 535],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_336*(x**0) + mem0_338*(x**1) + mem0_340*(x**2) + mem0_342*(x**3) + 
 mem0_344*(x**4) + mem0_346*(x**5) + mem0_348*(x**6) + mem0_350*(x**7)
 )
 [3329, x**8 - 2794],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_352*(x**0) + mem0_354*(x**1) + mem0_356*(x**2) + mem0_358*(x**3) + 
 mem0_360*(x**4) + mem0_362*(x**5) + mem0_364*(x**6) + mem0_366*(x**7)
 )
 [3329, x**8 - 2882],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_368*(x**0) + mem0_370*(x**1) + mem0_372*(x**2) + mem0_374*(x**3) + 
 mem0_376*(x**4) + mem0_378*(x**5) + mem0_380*(x**6) + mem0_382*(x**7)
 )
 [3329, x**8 - 447],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_384*(x**0) + mem0_386*(x**1) + mem0_388*(x**2) + mem0_390*(x**3) + 
 mem0_392*(x**4) + mem0_394*(x**5) + mem0_396*(x**6) + mem0_398*(x**7)
 )
 [3329, x**8 - 2393],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_400*(x**0) + mem0_402*(x**1) + mem0_404*(x**2) + mem0_406*(x**3) + 
 mem0_408*(x**4) + mem0_410*(x**5) + mem0_412*(x**6) + mem0_414*(x**7)
 )
 [3329, x**8 - 936],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_416*(x**0) + mem0_418*(x**1) + mem0_420*(x**2) + mem0_422*(x**3) + 
 mem0_424*(x**4) + mem0_426*(x**5) + mem0_428*(x**6) + mem0_430*(x**7)
 )
 [3329, x**8 - 2879],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_432*(x**0) + mem0_434*(x**1) + mem0_436*(x**2) + mem0_438*(x**3) + 
 mem0_440*(x**4) + mem0_442*(x**5) + mem0_444*(x**6) + mem0_446*(x**7)
 )
 [3329, x**8 - 450],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_448*(x**0) + mem0_450*(x**1) + mem0_452*(x**2) + mem0_454*(x**3) + 
 mem0_456*(x**4) + mem0_458*(x**5) + mem0_460*(x**6) + mem0_462*(x**7)
 )
 [3329, x**8 - 1974],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_464*(x**0) + mem0_466*(x**1) + mem0_468*(x**2) + mem0_470*(x**3) + 
 mem0_472*(x**4) + mem0_474*(x**5) + mem0_476*(x**6) + mem0_478*(x**7)
 )
 [3329, x**8 - 1355],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_480*(x**0) + mem0_482*(x**1) + mem0_484*(x**2) + mem0_486*(x**3) + 
 mem0_488*(x**4) + mem0_490*(x**5) + mem0_492*(x**6) + mem0_494*(x**7)
 )
 [3329, x**8 - 821],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_496*(x**0) + mem0_498*(x**1) + mem0_500*(x**2) + mem0_502*(x**3) + 
 mem0_504*(x**4) + mem0_506*(x**5) + mem0_508*(x**6) + mem0_510*(x**7)
@@ -19240,7 +19225,7 @@ add v_add21_5_3_31 v1535 v_call_i_5_3_31;
 (*   store i16 %add21.5.3.31, i16* %arrayidx11.5.3.31, align 2, !tbaa !3 *)
 mov mem0_502 v_add21_5_3_31;
 
-cut and [ input_polynomial = 
+cut and [ input_polynomial * input_polynomial = 
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -19307,385 +19292,385 @@ a_496 * x**248 + a_498 * x**249 + a_500 * x**250 + a_502 * x**251 +
 a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255
 ,
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_0*(x**0) + mem0_2*(x**1) + mem0_4*(x**2) + mem0_6*(x**3)
 )
 [3329, x**4 - 289],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_8*(x**0) + mem0_10*(x**1) + mem0_12*(x**2) + mem0_14*(x**3)
 )
 [3329, x**4 - 3040],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_16*(x**0) + mem0_18*(x**1) + mem0_20*(x**2) + mem0_22*(x**3)
 )
 [3329, x**4 - 331],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_24*(x**0) + mem0_26*(x**1) + mem0_28*(x**2) + mem0_30*(x**3)
 )
 [3329, x**4 - 2998],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_32*(x**0) + mem0_34*(x**1) + mem0_36*(x**2) + mem0_38*(x**3)
 )
 [3329, x**4 - 3253],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_40*(x**0) + mem0_42*(x**1) + mem0_44*(x**2) + mem0_46*(x**3)
 )
 [3329, x**4 - 76],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_48*(x**0) + mem0_50*(x**1) + mem0_52*(x**2) + mem0_54*(x**3)
 )
 [3329, x**4 - 1756],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_56*(x**0) + mem0_58*(x**1) + mem0_60*(x**2) + mem0_62*(x**3)
 )
 [3329, x**4 - 1573],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_64*(x**0) + mem0_66*(x**1) + mem0_68*(x**2) + mem0_70*(x**3)
 )
 [3329, x**4 - 1197],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_72*(x**0) + mem0_74*(x**1) + mem0_76*(x**2) + mem0_78*(x**3)
 )
 [3329, x**4 - 2132],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_80*(x**0) + mem0_82*(x**1) + mem0_84*(x**2) + mem0_86*(x**3)
 )
 [3329, x**4 - 2304],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_88*(x**0) + mem0_90*(x**1) + mem0_92*(x**2) + mem0_94*(x**3)
 )
 [3329, x**4 - 1025],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_96*(x**0) + mem0_98*(x**1) + mem0_100*(x**2) + mem0_102*(x**3)
 )
 [3329, x**4 - 2277],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_104*(x**0) + mem0_106*(x**1) + mem0_108*(x**2) + mem0_110*(x**3)
 )
 [3329, x**4 - 1052],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_112*(x**0) + mem0_114*(x**1) + mem0_116*(x**2) + mem0_118*(x**3)
 )
 [3329, x**4 - 2055],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_120*(x**0) + mem0_122*(x**1) + mem0_124*(x**2) + mem0_126*(x**3)
 )
 [3329, x**4 - 1274],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_128*(x**0) + mem0_130*(x**1) + mem0_132*(x**2) + mem0_134*(x**3)
 )
 [3329, x**4 - 650],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_136*(x**0) + mem0_138*(x**1) + mem0_140*(x**2) + mem0_142*(x**3)
 )
 [3329, x**4 - 2679],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_144*(x**0) + mem0_146*(x**1) + mem0_148*(x**2) + mem0_150*(x**3)
 )
 [3329, x**4 - 1977],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_152*(x**0) + mem0_154*(x**1) + mem0_156*(x**2) + mem0_158*(x**3)
 )
 [3329, x**4 - 1352],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_160*(x**0) + mem0_162*(x**1) + mem0_164*(x**2) + mem0_166*(x**3)
 )
 [3329, x**4 - 2513],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_168*(x**0) + mem0_170*(x**1) + mem0_172*(x**2) + mem0_174*(x**3)
 )
 [3329, x**4 - 816],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_176*(x**0) + mem0_178*(x**1) + mem0_180*(x**2) + mem0_182*(x**3)
 )
 [3329, x**4 - 632],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_184*(x**0) + mem0_186*(x**1) + mem0_188*(x**2) + mem0_190*(x**3)
 )
 [3329, x**4 - 2697],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_192*(x**0) + mem0_194*(x**1) + mem0_196*(x**2) + mem0_198*(x**3)
 )
 [3329, x**4 - 2865],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_200*(x**0) + mem0_202*(x**1) + mem0_204*(x**2) + mem0_206*(x**3)
 )
 [3329, x**4 - 464],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_208*(x**0) + mem0_210*(x**1) + mem0_212*(x**2) + mem0_214*(x**3)
 )
 [3329, x**4 - 33],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_216*(x**0) + mem0_218*(x**1) + mem0_220*(x**2) + mem0_222*(x**3)
 )
 [3329, x**4 - 3296],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_224*(x**0) + mem0_226*(x**1) + mem0_228*(x**2) + mem0_230*(x**3)
 )
 [3329, x**4 - 1320],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_232*(x**0) + mem0_234*(x**1) + mem0_236*(x**2) + mem0_238*(x**3)
 )
 [3329, x**4 - 2009],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_240*(x**0) + mem0_242*(x**1) + mem0_244*(x**2) + mem0_246*(x**3)
 )
 [3329, x**4 - 1915],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_248*(x**0) + mem0_250*(x**1) + mem0_252*(x**2) + mem0_254*(x**3)
 )
 [3329, x**4 - 1414],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_256*(x**0) + mem0_258*(x**1) + mem0_260*(x**2) + mem0_262*(x**3)
 )
 [3329, x**4 - 2319],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_264*(x**0) + mem0_266*(x**1) + mem0_268*(x**2) + mem0_270*(x**3)
 )
 [3329, x**4 - 1010],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_272*(x**0) + mem0_274*(x**1) + mem0_276*(x**2) + mem0_278*(x**3)
 )
 [3329, x**4 - 1435],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_280*(x**0) + mem0_282*(x**1) + mem0_284*(x**2) + mem0_286*(x**3)
 )
 [3329, x**4 - 1894],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_288*(x**0) + mem0_290*(x**1) + mem0_292*(x**2) + mem0_294*(x**3)
 )
 [3329, x**4 - 807],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_296*(x**0) + mem0_298*(x**1) + mem0_300*(x**2) + mem0_302*(x**3)
 )
 [3329, x**4 - 2522],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_304*(x**0) + mem0_306*(x**1) + mem0_308*(x**2) + mem0_310*(x**3)
 )
 [3329, x**4 - 452],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_312*(x**0) + mem0_314*(x**1) + mem0_316*(x**2) + mem0_318*(x**3)
 )
 [3329, x**4 - 2877],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_320*(x**0) + mem0_322*(x**1) + mem0_324*(x**2) + mem0_326*(x**3)
 )
 [3329, x**4 - 1438],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_328*(x**0) + mem0_330*(x**1) + mem0_332*(x**2) + mem0_334*(x**3)
 )
 [3329, x**4 - 1891],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_336*(x**0) + mem0_338*(x**1) + mem0_340*(x**2) + mem0_342*(x**3)
 )
 [3329, x**4 - 2868],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_344*(x**0) + mem0_346*(x**1) + mem0_348*(x**2) + mem0_350*(x**3)
 )
 [3329, x**4 - 461],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_352*(x**0) + mem0_354*(x**1) + mem0_356*(x**2) + mem0_358*(x**3)
 )
 [3329, x**4 - 1534],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_360*(x**0) + mem0_362*(x**1) + mem0_364*(x**2) + mem0_366*(x**3)
 )
 [3329, x**4 - 1795],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_368*(x**0) + mem0_370*(x**1) + mem0_372*(x**2) + mem0_374*(x**3)
 )
 [3329, x**4 - 2402],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_376*(x**0) + mem0_378*(x**1) + mem0_380*(x**2) + mem0_382*(x**3)
 )
 [3329, x**4 - 927],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_384*(x**0) + mem0_386*(x**1) + mem0_388*(x**2) + mem0_390*(x**3)
 )
 [3329, x**4 - 2647],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_392*(x**0) + mem0_394*(x**1) + mem0_396*(x**2) + mem0_398*(x**3)
 )
 [3329, x**4 - 682],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_400*(x**0) + mem0_402*(x**1) + mem0_404*(x**2) + mem0_406*(x**3)
 )
 [3329, x**4 - 2617],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_408*(x**0) + mem0_410*(x**1) + mem0_412*(x**2) + mem0_414*(x**3)
 )
 [3329, x**4 - 712],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_416*(x**0) + mem0_418*(x**1) + mem0_420*(x**2) + mem0_422*(x**3)
 )
 [3329, x**4 - 1481],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_424*(x**0) + mem0_426*(x**1) + mem0_428*(x**2) + mem0_430*(x**3)
 )
 [3329, x**4 - 1848],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_432*(x**0) + mem0_434*(x**1) + mem0_436*(x**2) + mem0_438*(x**3)
 )
 [3329, x**4 - 648],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_440*(x**0) + mem0_442*(x**1) + mem0_444*(x**2) + mem0_446*(x**3)
 )
 [3329, x**4 - 2681],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_448*(x**0) + mem0_450*(x**1) + mem0_452*(x**2) + mem0_454*(x**3)
 )
 [3329, x**4 - 2474],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_456*(x**0) + mem0_458*(x**1) + mem0_460*(x**2) + mem0_462*(x**3)
 )
 [3329, x**4 - 855],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_464*(x**0) + mem0_466*(x**1) + mem0_468*(x**2) + mem0_470*(x**3)
 )
 [3329, x**4 - 3110],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_472*(x**0) + mem0_474*(x**1) + mem0_476*(x**2) + mem0_478*(x**3)
 )
 [3329, x**4 - 219],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_480*(x**0) + mem0_482*(x**1) + mem0_484*(x**2) + mem0_486*(x**3)
 )
 [3329, x**4 - 1227],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_488*(x**0) + mem0_490*(x**1) + mem0_492*(x**2) + mem0_494*(x**3)
 )
 [3329, x**4 - 2102],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_496*(x**0) + mem0_498*(x**1) + mem0_500*(x**2) + mem0_502*(x**3)
 )
 [3329, x**4 - 910],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 mem0_504*(x**0) + mem0_506*(x**1) + mem0_508*(x**2) + mem0_510*(x**3)
 )
@@ -22836,7 +22821,7 @@ mov r_504 mem0_504@sint16; mov r_506 mem0_506@sint16;
 mov r_508 mem0_508@sint16; mov r_510 mem0_510@sint16;
 
 {
-  and [ input_polynomial = 
+  and [ input_polynomial * input_polynomial = 
 a_0 * x**0 + a_2 * x**1 + a_4 * x**2 + a_6 * x**3 + 
 a_8 * x**4 + a_10 * x**5 + a_12 * x**6 + a_14 * x**7 + 
 a_16 * x**8 + a_18 * x**9 + a_20 * x**10 + a_22 * x**11 + 
@@ -22903,769 +22888,769 @@ a_496 * x**248 + a_498 * x**249 + a_500 * x**250 + a_502 * x**251 +
 a_504 * x**252 + a_506 * x**253 + a_508 * x**254 + a_510 * x**255
 ,
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_0*(x**0) + r_2*(x**1)
 )
 [3329, x**2 - 17],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_4*(x**0) + r_6*(x**1)
 )
 [3329, x**2 - 3312],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_8*(x**0) + r_10*(x**1)
 )
 [3329, x**2 - 2761],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_12*(x**0) + r_14*(x**1)
 )
 [3329, x**2 - 568],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_16*(x**0) + r_18*(x**1)
 )
 [3329, x**2 - 583],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_20*(x**0) + r_22*(x**1)
 )
 [3329, x**2 - 2746],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_24*(x**0) + r_26*(x**1)
 )
 [3329, x**2 - 2649],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_28*(x**0) + r_30*(x**1)
 )
 [3329, x**2 - 680],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_32*(x**0) + r_34*(x**1)
 )
 [3329, x**2 - 1637],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_36*(x**0) + r_38*(x**1)
 )
 [3329, x**2 - 1692],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_40*(x**0) + r_42*(x**1)
 )
 [3329, x**2 - 723],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_44*(x**0) + r_46*(x**1)
 )
 [3329, x**2 - 2606],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_48*(x**0) + r_50*(x**1)
 )
 [3329, x**2 - 2288],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_52*(x**0) + r_54*(x**1)
 )
 [3329, x**2 - 1041],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_56*(x**0) + r_58*(x**1)
 )
 [3329, x**2 - 1100],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_60*(x**0) + r_62*(x**1)
 )
 [3329, x**2 - 2229],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_64*(x**0) + r_66*(x**1)
 )
 [3329, x**2 - 1409],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_68*(x**0) + r_70*(x**1)
 )
 [3329, x**2 - 1920],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_72*(x**0) + r_74*(x**1)
 )
 [3329, x**2 - 2662],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_76*(x**0) + r_78*(x**1)
 )
 [3329, x**2 - 667],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_80*(x**0) + r_82*(x**1)
 )
 [3329, x**2 - 3281],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_84*(x**0) + r_86*(x**1)
 )
 [3329, x**2 - 48],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_88*(x**0) + r_90*(x**1)
 )
 [3329, x**2 - 233],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_92*(x**0) + r_94*(x**1)
 )
 [3329, x**2 - 3096],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_96*(x**0) + r_98*(x**1)
 )
 [3329, x**2 - 756],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_100*(x**0) + r_102*(x**1)
 )
 [3329, x**2 - 2573],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_104*(x**0) + r_106*(x**1)
 )
 [3329, x**2 - 2156],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_108*(x**0) + r_110*(x**1)
 )
 [3329, x**2 - 1173],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_112*(x**0) + r_114*(x**1)
 )
 [3329, x**2 - 3015],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_116*(x**0) + r_118*(x**1)
 )
 [3329, x**2 - 314],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_120*(x**0) + r_122*(x**1)
 )
 [3329, x**2 - 3050],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_124*(x**0) + r_126*(x**1)
 )
 [3329, x**2 - 279],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_128*(x**0) + r_130*(x**1)
 )
 [3329, x**2 - 1703],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_132*(x**0) + r_134*(x**1)
 )
 [3329, x**2 - 1626],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_136*(x**0) + r_138*(x**1)
 )
 [3329, x**2 - 1651],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_140*(x**0) + r_142*(x**1)
 )
 [3329, x**2 - 1678],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_144*(x**0) + r_146*(x**1)
 )
 [3329, x**2 - 2789],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_148*(x**0) + r_150*(x**1)
 )
 [3329, x**2 - 540],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_152*(x**0) + r_154*(x**1)
 )
 [3329, x**2 - 1789],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_156*(x**0) + r_158*(x**1)
 )
 [3329, x**2 - 1540],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_160*(x**0) + r_162*(x**1)
 )
 [3329, x**2 - 1847],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_164*(x**0) + r_166*(x**1)
 )
 [3329, x**2 - 1482],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_168*(x**0) + r_170*(x**1)
 )
 [3329, x**2 - 952],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_172*(x**0) + r_174*(x**1)
 )
 [3329, x**2 - 2377],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_176*(x**0) + r_178*(x**1)
 )
 [3329, x**2 - 1461],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_180*(x**0) + r_182*(x**1)
 )
 [3329, x**2 - 1868],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_184*(x**0) + r_186*(x**1)
 )
 [3329, x**2 - 2687],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_188*(x**0) + r_190*(x**1)
 )
 [3329, x**2 - 642],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_192*(x**0) + r_194*(x**1)
 )
 [3329, x**2 - 939],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_196*(x**0) + r_198*(x**1)
 )
 [3329, x**2 - 2390],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_200*(x**0) + r_202*(x**1)
 )
 [3329, x**2 - 2308],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_204*(x**0) + r_206*(x**1)
 )
 [3329, x**2 - 1021],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_208*(x**0) + r_210*(x**1)
 )
 [3329, x**2 - 2437],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_212*(x**0) + r_214*(x**1)
 )
 [3329, x**2 - 892],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_216*(x**0) + r_218*(x**1)
 )
 [3329, x**2 - 2388],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_220*(x**0) + r_222*(x**1)
 )
 [3329, x**2 - 941],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_224*(x**0) + r_226*(x**1)
 )
 [3329, x**2 - 733],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_228*(x**0) + r_230*(x**1)
 )
 [3329, x**2 - 2596],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_232*(x**0) + r_234*(x**1)
 )
 [3329, x**2 - 2337],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_236*(x**0) + r_238*(x**1)
 )
 [3329, x**2 - 992],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_240*(x**0) + r_242*(x**1)
 )
 [3329, x**2 - 268],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_244*(x**0) + r_246*(x**1)
 )
 [3329, x**2 - 3061],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_248*(x**0) + r_250*(x**1)
 )
 [3329, x**2 - 641],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_252*(x**0) + r_254*(x**1)
 )
 [3329, x**2 - 2688],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_256*(x**0) + r_258*(x**1)
 )
 [3329, x**2 - 1584],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_260*(x**0) + r_262*(x**1)
 )
 [3329, x**2 - 1745],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_264*(x**0) + r_266*(x**1)
 )
 [3329, x**2 - 2298],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_268*(x**0) + r_270*(x**1)
 )
 [3329, x**2 - 1031],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_272*(x**0) + r_274*(x**1)
 )
 [3329, x**2 - 2037],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_276*(x**0) + r_278*(x**1)
 )
 [3329, x**2 - 1292],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_280*(x**0) + r_282*(x**1)
 )
 [3329, x**2 - 3220],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_284*(x**0) + r_286*(x**1)
 )
 [3329, x**2 - 109],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_288*(x**0) + r_290*(x**1)
 )
 [3329, x**2 - 375],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_292*(x**0) + r_294*(x**1)
 )
 [3329, x**2 - 2954],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_296*(x**0) + r_298*(x**1)
 )
 [3329, x**2 - 2549],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_300*(x**0) + r_302*(x**1)
 )
 [3329, x**2 - 780],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_304*(x**0) + r_306*(x**1)
 )
 [3329, x**2 - 2090],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_308*(x**0) + r_310*(x**1)
 )
 [3329, x**2 - 1239],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_312*(x**0) + r_314*(x**1)
 )
 [3329, x**2 - 1645],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_316*(x**0) + r_318*(x**1)
 )
 [3329, x**2 - 1684],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_320*(x**0) + r_322*(x**1)
 )
 [3329, x**2 - 1063],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_324*(x**0) + r_326*(x**1)
 )
 [3329, x**2 - 2266],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_328*(x**0) + r_330*(x**1)
 )
 [3329, x**2 - 319],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_332*(x**0) + r_334*(x**1)
 )
 [3329, x**2 - 3010],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_336*(x**0) + r_338*(x**1)
 )
 [3329, x**2 - 2773],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_340*(x**0) + r_342*(x**1)
 )
 [3329, x**2 - 556],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_344*(x**0) + r_346*(x**1)
 )
 [3329, x**2 - 757],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_348*(x**0) + r_350*(x**1)
 )
 [3329, x**2 - 2572],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_352*(x**0) + r_354*(x**1)
 )
 [3329, x**2 - 2099],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_356*(x**0) + r_358*(x**1)
 )
 [3329, x**2 - 1230],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_360*(x**0) + r_362*(x**1)
 )
 [3329, x**2 - 561],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_364*(x**0) + r_366*(x**1)
 )
 [3329, x**2 - 2768],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_368*(x**0) + r_370*(x**1)
 )
 [3329, x**2 - 2466],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_372*(x**0) + r_374*(x**1)
 )
 [3329, x**2 - 863],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_376*(x**0) + r_378*(x**1)
 )
 [3329, x**2 - 2594],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_380*(x**0) + r_382*(x**1)
 )
 [3329, x**2 - 735],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_384*(x**0) + r_386*(x**1)
 )
 [3329, x**2 - 2804],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_388*(x**0) + r_390*(x**1)
 )
 [3329, x**2 - 525],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_392*(x**0) + r_394*(x**1)
 )
 [3329, x**2 - 1092],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_396*(x**0) + r_398*(x**1)
 )
 [3329, x**2 - 2237],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_400*(x**0) + r_402*(x**1)
 )
 [3329, x**2 - 403],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_404*(x**0) + r_406*(x**1)
 )
 [3329, x**2 - 2926],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_408*(x**0) + r_410*(x**1)
 )
 [3329, x**2 - 1026],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_412*(x**0) + r_414*(x**1)
 )
 [3329, x**2 - 2303],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_416*(x**0) + r_418*(x**1)
 )
 [3329, x**2 - 1143],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_420*(x**0) + r_422*(x**1)
 )
 [3329, x**2 - 2186],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_424*(x**0) + r_426*(x**1)
 )
 [3329, x**2 - 2150],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_428*(x**0) + r_430*(x**1)
 )
 [3329, x**2 - 1179],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_432*(x**0) + r_434*(x**1)
 )
 [3329, x**2 - 2775],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_436*(x**0) + r_438*(x**1)
 )
 [3329, x**2 - 554],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_440*(x**0) + r_442*(x**1)
 )
 [3329, x**2 - 886],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_444*(x**0) + r_446*(x**1)
 )
 [3329, x**2 - 2443],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_448*(x**0) + r_450*(x**1)
 )
 [3329, x**2 - 1722],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_452*(x**0) + r_454*(x**1)
 )
 [3329, x**2 - 1607],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_456*(x**0) + r_458*(x**1)
 )
 [3329, x**2 - 1212],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_460*(x**0) + r_462*(x**1)
 )
 [3329, x**2 - 2117],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_464*(x**0) + r_466*(x**1)
 )
 [3329, x**2 - 1874],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_468*(x**0) + r_470*(x**1)
 )
 [3329, x**2 - 1455],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_472*(x**0) + r_474*(x**1)
 )
 [3329, x**2 - 1029],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_476*(x**0) + r_478*(x**1)
 )
 [3329, x**2 - 2300],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_480*(x**0) + r_482*(x**1)
 )
 [3329, x**2 - 2110],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_484*(x**0) + r_486*(x**1)
 )
 [3329, x**2 - 1219],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_488*(x**0) + r_490*(x**1)
 )
 [3329, x**2 - 2935],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_492*(x**0) + r_494*(x**1)
 )
 [3329, x**2 - 394],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_496*(x**0) + r_498*(x**1)
 )
 [3329, x**2 - 885],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_500*(x**0) + r_502*(x**1)
 )
 [3329, x**2 - 2444],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_504*(x**0) + r_506*(x**1)
 )
 [3329, x**2 - 2154],
 eqmod 
-input_polynomial
+input_polynomial * input_polynomial
 (
 r_508*(x**0) + r_510*(x**1)
 )
