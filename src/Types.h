@@ -200,10 +200,11 @@ class SymbolicAddress {
 public:
     int sym;
     int offset;
+    std::string name;
 
 public:
     SymbolicAddress();
-    SymbolicAddress(int s, int o = 0);
+    SymbolicAddress(int s, int o = 0, std::string n = "");
 
     SymbolicAddress add(int o);
     cryptoline::Variable toVariable(cryptoline::CryptoLineType, unsigned);

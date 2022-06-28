@@ -12,6 +12,7 @@
 // #include "llvm/IR/ConstantsContext.h"
 #include "llvm/Support/FileSystem.h"
 #include "Translator.h"
+#include "Utils.h"
 
 using namespace llvm;
 using namespace std;
@@ -196,7 +197,7 @@ bool Translator::tranlate(ProgramCounter pc, std::string outputName, bool inBloc
         //return false;
     //}
 }
-
+/*
 std::string Translator::replaceChar(std::string str, char target, char c) {
   for (int i = 0; i < str.length(); i++) {
     if (str[i] == target)
@@ -204,13 +205,13 @@ std::string Translator::replaceChar(std::string str, char target, char c) {
   }
   return str;
 }
-
+*/
 std::string Translator::getName(llvm::Value* v) {
     if (v->hasName()) {
         if (this->legacy) {
-            return replaceChar(v->getName(), '.', '_');
+            return Utils::replaceChar(v->getName(), '.', '_');
         } else {
-            return "v_" + replaceChar(v->getName(), '.', '_');
+            return "v_" + Utils::replaceChar(v->getName(), '.', '_');
         }
     } else {
         std::string s;

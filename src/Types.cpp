@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "Types.h"
+#include "Utils.h"
 
 using namespace cryptoline;
 
@@ -26,15 +27,17 @@ SymbolicAddress::SymbolicAddress() {
     // this should never be used
     this->sym = -1;
     this->offset = 0;
+    this->name = "";
 }
 
-SymbolicAddress::SymbolicAddress(int s, int o) {
+SymbolicAddress::SymbolicAddress(int s, int o, std::string n) {
     this->sym = s;
     this->offset = o;
+    this->name = n;
 }
 
 SymbolicAddress SymbolicAddress::add(int o) {
-    return SymbolicAddress(this->sym, this->offset + o);
+    return SymbolicAddress(this->sym, this->offset + o, this->name);
 }
 
 /*
@@ -51,16 +54,27 @@ std::string SymbolicAddress::toStr() {
 */
 
 Variable SymbolicAddress::toVariable(CryptoLineType t, unsigned w) {
-    return Variable(t, w, "mem" + std::to_string(this->sym), this->offset);
+    if (this->name == "") {
+        return Variable(t, w, "mem" + std::to_string(this->sym), this->offset);
+    } else {
+        return Variable(t, w, this->name, this->offset);
+    }
+
 }
 
 Variable SymbolicAddress::toUVar(unsigned w) {
-    return Variable::UVar(w, "mem" + std::to_string(this->sym), this->offset);
+    return this->toVariable(CryptoLineType::uint, w);
+    //return Variable::UVar(w, "mem" + std::to_string(this->sym), this->offset);
 }
 
 SymbolicAddress PointerTable::getSymAddr(llvm::Value* v) {
     if (this->table.count(v) == 0) {
-        this->table[v] = SymbolicAddress(this->symNum);
+        if (v->hasName()) {
+            this->table[v] = SymbolicAddress(this->symNum, 0,
+                                             Utils::replaceChar(v->getName(), '.', '_'));
+        } else {
+            this->table[v] = SymbolicAddress(this->symNum);
+        }
         this->symNum++;
         return this->table[v];
     } else {

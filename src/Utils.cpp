@@ -17,3 +17,12 @@ Set Utils::set_difference(const Set& lhs, const Set& rhs) {
 }
 
 
+std::string Utils::replaceChar(std::string str, char target, char c) {
+  for (int i = 0; i < str.length(); i++) {
+    if (str[i] == target)
+      str[i] = c;
+  }
+  return str;
+}
+
+

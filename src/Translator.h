@@ -45,7 +45,7 @@ public:
     std::string toString(llvm::Instruction* inst);
 
 private:
-    std::string replaceChar(std::string str, char target, char c);
+    //std::string replaceChar(std::string str, char target, char c);
     bool legacy = false;
     CryptoLineType defaultType = CryptoLineType::uint;
 
