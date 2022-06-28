@@ -406,7 +406,7 @@ void Translator::evalBinaryOpArithmetic(BinaryOperator* bo) {
             this->result.push_back(s);
             break;
         case Instruction::BinaryOps::Sub:
-            s = Statement::Subs(Arg::Flag("carry"),
+            s = Statement::Subb(Arg::Flag("carry"),
                                 Arg::Var(dstL),
                                 a1L, a2L);
             this->result.push_back(s);

@@ -418,7 +418,7 @@ std::map<CryptoLineOps, std::string> Statement::name = {
         {CryptoLineOps::Adc, "adc"},
         {CryptoLineOps::Adcs, "adcs"},
         {CryptoLineOps::Sub, "sub"},
-        {CryptoLineOps::Subs, "subs"},
+        {CryptoLineOps::Subb, "subb"},
         {CryptoLineOps::Sbb, "sbb"},
         {CryptoLineOps::Sbbs, "sbbs"},
         {CryptoLineOps::Mul, "mul"},
@@ -445,7 +445,7 @@ std::map<CryptoLineOps, std::string> Statement::name_legacy = {
         {CryptoLineOps::Adc, "bvAdc"},
         {CryptoLineOps::Adcs, "bvAdcC"},
         {CryptoLineOps::Sub, "bvSub"},
-        {CryptoLineOps::Subs, "bvSubC"},
+        {CryptoLineOps::Subb, "bvSubC"},
         {CryptoLineOps::Sbb, "bvSbb"},
         {CryptoLineOps::Sbbs, "bvSbbC"},
         {CryptoLineOps::Mul, "bvMul"},
@@ -524,9 +524,9 @@ Statement Statement::Sub(Argument dst, Argument src1, Argument src2) {
     return s;
 }
 
-Statement Statement::Subs(Argument borrow, Argument dst, Argument src1, Argument src2) {
+Statement Statement::Subb(Argument borrow, Argument dst, Argument src1, Argument src2) {
     Statement s;
-    s.op = CryptoLineOps::Subs;
+    s.op = CryptoLineOps::Subb;
     s.args.push_back(borrow);
     s.args.push_back(dst);
     s.args.push_back(src1);
@@ -701,7 +701,7 @@ std::string Statement::toStr() {
     // instructions with 2 dsts
     case CryptoLineOps::Adds:
     case CryptoLineOps::Adcs:
-    case CryptoLineOps::Subs:
+    case CryptoLineOps::Subb:
     case CryptoLineOps::Sbbs:
     case CryptoLineOps::Mulf:
     case CryptoLineOps::ConcatShl:
@@ -788,7 +788,7 @@ std::string Statement::toStr_legacy() {
     // instructions with 2 dsts
     case CryptoLineOps::Adds:
     case CryptoLineOps::Adcs:
-    case CryptoLineOps::Subs:
+    case CryptoLineOps::Subb:
     case CryptoLineOps::Sbbs:
     case CryptoLineOps::Mulf:
     case CryptoLineOps::ConcatShl:

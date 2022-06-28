@@ -40,7 +40,7 @@ enum class CryptoLineOps {
     Adc,
     Adcs,
     Sub,
-    Subs,
+    Subb,
     Sbb,
     Sbbs,
     Mul,
@@ -168,7 +168,7 @@ public:
     static Statement Adc(Argument dst, Argument src1, Argument src2, Argument c);
     static Statement Adcs(Argument carry, Argument dst, Argument src1, Argument src2, Argument c);
     static Statement Sub(Argument dst, Argument src1, Argument src2);
-    static Statement Subs(Argument borrow, Argument dst, Argument src1, Argument src2);
+    static Statement Subb(Argument borrow, Argument dst, Argument src1, Argument src2);
     static Statement Sbb(Argument dst, Argument src1, Argument src2, Argument b);
     static Statement Sbbs(Argument borrow, Argument dst, Argument src1, Argument src2, Argument b);
     static Statement Mul(Argument dst, Argument src1, Argument src2);
