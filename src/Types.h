@@ -49,6 +49,8 @@ enum class CryptoLineOps {
     Shl,
     Split,
     And,
+    Or,
+    Xor,
     Nondet,
     Cast,
     Vpc,
@@ -175,6 +177,8 @@ public:
     static Statement Shl(Argument dst, Argument src, Argument n);
     static Statement Split(Argument dstH, Argument dstL, Argument src, Argument n);
     static Statement And(Argument dst, Argument src1, Argument src2);
+    static Statement Or(Argument dst, Argument src1, Argument src2);
+    static Statement Xor(Argument dst, Argument src1, Argument src2);
     static Statement Nondet(Argument dst);
     static Statement Cast(Argument dst, Argument src);
     static Statement Vpc(Argument dst, Argument src);

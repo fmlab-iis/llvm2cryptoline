@@ -413,6 +413,8 @@ std::map<CryptoLineOps, std::string> Statement::name = {
         {CryptoLineOps::Shl, "shl"},
         {CryptoLineOps::Split, "split"},
         {CryptoLineOps::And, "and"},
+        {CryptoLineOps::Or, "or"},
+        {CryptoLineOps::Xor, "xor"},
         {CryptoLineOps::Nondet, "nondet"},
         {CryptoLineOps::Cast, "cast"},
         {CryptoLineOps::Vpc, "vpc"},
@@ -597,6 +599,24 @@ Statement Statement::And(Argument dst, Argument src1, Argument src2) {
     return s;
 }
 
+Statement Statement::Or(Argument dst, Argument src1, Argument src2) {
+    Statement s;
+    s.op = CryptoLineOps::Or;
+    s.args.push_back(dst);
+    s.args.push_back(src1);
+    s.args.push_back(src2);
+    return s;
+}
+
+Statement Statement::Xor(Argument dst, Argument src1, Argument src2) {
+    Statement s;
+    s.op = CryptoLineOps::Xor;
+    s.args.push_back(dst);
+    s.args.push_back(src1);
+    s.args.push_back(src2);
+    return s;
+}
+
 Statement Statement::Nondet(Argument dst) {
     Statement s;
     s.op = CryptoLineOps::Nondet;
@@ -681,6 +701,18 @@ std::string Statement::toStr() {
         break;
     // and
     case CryptoLineOps::And:
+        s = Statement::name[this->op] + " " + this->args[0].getType() + " "
+            + this->args[0].toDst()
+            + " " + this->args[1].toSrc() + " " + this->args[2].toSrc() + ";";
+        break;
+    // or
+    case CryptoLineOps::Or:
+        s = Statement::name[this->op] + " " + this->args[0].getType() + " "
+            + this->args[0].toDst()
+            + " " + this->args[1].toSrc() + " " + this->args[2].toSrc() + ";";
+        break;
+    // xor
+    case CryptoLineOps::Xor:
         s = Statement::name[this->op] + " " + this->args[0].getType() + " "
             + this->args[0].toDst()
             + " " + this->args[1].toSrc() + " " + this->args[2].toSrc() + ";";
