@@ -422,9 +422,11 @@ std::map<CryptoLineOps, std::string> Statement::name = {
         {CryptoLineOps::Sbb, "sbb"},
         {CryptoLineOps::Sbbs, "sbbs"},
         {CryptoLineOps::Mul, "mul"},
+        {CryptoLineOps::Muls, "muls"},
         {CryptoLineOps::Mulf, "mull"},
         {CryptoLineOps::ConcatShl, "cshl"},
         {CryptoLineOps::Shl, "shl"},
+        {CryptoLineOps::Shls, "shls"},
         {CryptoLineOps::Split, "split"},
         {CryptoLineOps::And, "and"},
         {CryptoLineOps::Or, "or"},
@@ -564,6 +566,16 @@ Statement Statement::Mul(Argument dst, Argument src1, Argument src2) {
     return s;
 }
 
+Statement Statement::Muls(Argument flag, Argument dst, Argument src1, Argument src2) {
+    Statement s;
+    s.op = CryptoLineOps::Muls;
+    s.args.push_back(flag);
+    s.args.push_back(dst);
+    s.args.push_back(src1);
+    s.args.push_back(src2);
+    return s;
+}
+
 Statement Statement::Mulf(Argument dstH, Argument dstL, Argument src1, Argument src2) {
     Statement s;
     s.op = CryptoLineOps::Mulf;
@@ -588,6 +600,16 @@ Statement Statement::ConcatShl(Argument dstH, Argument dstL, Argument src1, Argu
 Statement Statement::Shl(Argument dst, Argument src, Argument n) {
     Statement s;
     s.op = CryptoLineOps::Shl;
+    s.args.push_back(dst);
+    s.args.push_back(src);
+    s.args.push_back(n);
+    return s;
+}
+
+Statement Statement::Shls(Argument flag, Argument dst, Argument src, Argument n) {
+    Statement s;
+    s.op = CryptoLineOps::Shls;
+    s.args.push_back(flag);
     s.args.push_back(dst);
     s.args.push_back(src);
     s.args.push_back(n);
@@ -703,7 +725,9 @@ std::string Statement::toStr() {
     case CryptoLineOps::Adcs:
     case CryptoLineOps::Subb:
     case CryptoLineOps::Sbbs:
+    case CryptoLineOps::Muls:
     case CryptoLineOps::Mulf:
+    case CryptoLineOps::Shls:
     case CryptoLineOps::ConcatShl:
     case CryptoLineOps::Split:
         s = Statement::name[this->op] + " " + this->args[0].toDst()

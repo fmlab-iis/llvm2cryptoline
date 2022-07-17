@@ -427,19 +427,63 @@ void Translator::evalBinaryOpArithmetic(BinaryOperator* bo) {
 
         switch (bo->getOpcode()) {
         case Instruction::BinaryOps::Add:
-            s = Statement::Add(dst, src1, src2);
+            if (safety) {
+                s = Statement::Add(dst, src1, src2);
+                this->result.push_back(s);
+            } else {
+                Arg dis = Arg::Flag("discard_" + to_string(discardCount));
+                discardCount++;
+                s = Statement::Adds(dis, dst, src1, src2);
+                this->result.push_back(s);
+
+                // heuristic for P434
+                if (BinaryOperator* t1c = dyn_cast<BinaryOperator>(t1)) {
+                    if (BinaryOperator* t2c = dyn_cast<BinaryOperator>(t2)) {
+                        if ((t1c->getOpcode() == Instruction::BinaryOps::Add
+                                || t1c->getOpcode() == Instruction::BinaryOps::And
+                                || t1c->getOpcode() == Instruction::BinaryOps::LShr)
+                            && (t2c->getOpcode() != Instruction::BinaryOps::Add
+                               || t2c->getOpcode() != Instruction::BinaryOps::And
+                               || t2c->getOpcode() != Instruction::BinaryOps::LShr)) {
+                            s = Statement::Comment("Heuristics applied.");
+                            this->result.push_back(s);
+                            s = Statement::Assert(Predicate::True(),
+                                                  Predicate::Eq(Arg::Flag("discard_" + to_string(discardCount-1)),
+                                                                Arg::Flag("0@1")));
+                            this->result.push_back(s);
+                            s = Statement::Assume(Predicate::Eq(Arg::Flag("discard_" + to_string(discardCount-1)),
+                                                                Arg::Flag("0")),
+                                                  Predicate::True());
+                            this->result.push_back(s);
+                        }
+                    }
+                }
+            }
             break;
         case Instruction::BinaryOps::Sub:
-            s = Statement::Sub(dst, src1, src2);
+            if (safety)
+                s = Statement::Sub(dst, src1, src2);
+            else {
+                Arg dis = Arg::Flag("discard_" + to_string(discardCount));
+                discardCount++;
+                s = Statement::Subb(dis, dst, src1, src2);
+            }
+            this->result.push_back(s);
             break;
         case Instruction::BinaryOps::Mul:
-            s = Statement::Mul(dst, src1, src2);
+            if (mulSafety)
+                s = Statement::Mul(dst, src1, src2);
+            else {
+                Arg dis = Arg::Flag("discard_" + to_string(discardCount));
+                discardCount++;
+                s = Statement::Muls(dis, dst, src1, src2);
+            }
+            this->result.push_back(s);
             break;
         default:    // which will not happen
             break;
         }
 
-        this->result.push_back(s);
         this->define(dst);
 
     } else if (type->isVectorTy()) {
@@ -495,13 +539,31 @@ void Translator::evalBinaryOpArithmetic(BinaryOperator* bo) {
 
             switch (bo->getOpcode()) {
             case Instruction::BinaryOps::Add:
-                s = Statement::Add(dst, src1, src2);
+                if (safety)
+                    s = Statement::Add(dst, src1, src2);
+                else {
+                    Arg dis = Arg::Flag("discard_" + to_string(discardCount));
+                    discardCount++;
+                    s = Statement::Adds(dis, dst, src1, src2);
+                }
                 break;
             case Instruction::BinaryOps::Sub:
-                s = Statement::Sub(dst, src1, src2);
+                if (safety)
+                    s = Statement::Sub(dst, src1, src2);
+                else {
+                    Arg dis = Arg::Flag("discard_" + to_string(discardCount));
+                    discardCount++;
+                    s = Statement::Subb(dis, dst, src1, src2);
+                }
                 break;
             case Instruction::BinaryOps::Mul:
-                s = Statement::Mul(dst, src1, src2);
+                if (mulSafety)
+                    s = Statement::Mul(dst, src1, src2);
+                else {
+                    Arg dis = Arg::Flag("discard_" + to_string(discardCount));
+                    discardCount++;
+                    s = Statement::Muls(dis, dst, src1, src2);
+                }
                 break;
             default:    // which will not happen
                 break;
@@ -531,8 +593,27 @@ void Translator::evalBinaryOpShl(BinaryOperator* bo) {
             // Var src = Var::UVar(width, getName(t1));
             Var src = Var(this->defaultType, width, getName(t1));
 
-            s = Statement::Shl(dst, src, Arg::Num(n));
-            this->result.push_back(s);
+            if (safety) {
+                s = Statement::Shl(dst, src, Arg::Num(n));
+                this->result.push_back(s);
+            } else {
+                Arg dis = Arg::Flag("discard_" + to_string(discardCount));
+                discardCount++;
+                s = Statement::Shls(dis, dst, src, Arg::Num(n));
+                this->result.push_back(s);
+
+                // heuristic for P434
+                s = Statement::Comment("Heuristics applied.");
+                this->result.push_back(s);
+                s = Statement::Assert(Predicate::True(),
+                                      Predicate::Eq(dst,
+                                                    Arg::Flag("tmp_to_be_used * const 64 (2**32)")));
+                this->result.push_back(s);
+                s = Statement::Assume(Predicate::Eq(dst,
+                                                    Arg::Flag("tmp_to_be_used * (2**32)")),
+                                      Predicate::True());
+                this->result.push_back(s);
+            }
 
             // compute defined/undefined variables
             this->use(src);
@@ -752,6 +833,21 @@ void Translator::evalBinaryOpLShr(BinaryOperator* bo) {
                              Arg::Num(n));
         this->result.push_back(s);
         this->define(dst);
+
+        // heurisitc
+        if (n == 32 && this->lowerPart.count(src1) != 0) {
+            s = Statement::Comment("Heuristics applied.");
+            this->result.push_back(s);
+            s = Statement::Assert(Predicate::True(),
+                                  Predicate::Eq(Var(this->defaultType, width, "tmp_to_be_used"),
+                                                this->lowerPart[src1]));
+            this->result.push_back(s);
+            s = Statement::Assume(Predicate::Eq(Var(this->defaultType, width, "tmp_to_be_used"),
+                                                this->lowerPart[src1]),
+                                  Predicate::True());
+            this->result.push_back(s);
+            this->lowerPart.erase(src1);
+        }
 
     } else { // the second argument is a variable!
         // the shifted number cannot be a variable
@@ -1137,6 +1233,8 @@ void Translator::evalBinaryOpAnd(BinaryOperator* bo) {
         }
 
         bool h_low64 = false; // heuristic: get low 64 bits
+        bool h_low32 = false; // heuristic for P434: get low 32 bits
+        bool h_high = false; // heuristic for P434: clear low 32 bits
 
         if (ConstantInt* c2 = llvm::dyn_cast<llvm::ConstantInt>(t2)) {
             if (this->defaultType == CryptoLineType::sint) {
@@ -1148,6 +1246,11 @@ void Translator::evalBinaryOpAnd(BinaryOperator* bo) {
             if (width == 128 && c2->getValue().countTrailingOnes() == 64
                     && c2->getValue().countLeadingZeros() == 64) {
                 h_low64 = true;
+            } else if (width == 64 && c2->getValue().countTrailingOnes() == 32
+                    && c2->getValue().countLeadingZeros() == 32) {
+                h_low32 = true;
+            } else if (width == 64 && c2->getValue().countTrailingZeros() == 32) {
+                h_high = true;
             }
         } else {
             // Var v = Var::UVar(width, getName(t2));
@@ -1170,6 +1273,22 @@ void Translator::evalBinaryOpAnd(BinaryOperator* bo) {
             s = Statement::Assume(Predicate::Eq(dst, src1),
                                   Predicate::True());
             this->result.push_back(s);
+        } else if (h_low32) {
+            this->lowerPart[src1] = dst;
+        } else if (h_high && this->lowerPart.count(src1) != 0) {
+            s = Statement::Comment("Heuristics applied.");
+            this->result.push_back(s);
+            s = Statement::Assert(Predicate::True(),
+                                  Predicate::Eq(src1,
+                                                Arg::Flag(dst.toRangeArg() +
+                                                          " + " + this->lowerPart[src1].toAlgArg())));
+            this->result.push_back(s);
+            s = Statement::Assume(Predicate::Eq(src1,
+                                                Arg::Flag(dst.toRangeArg() +
+                                                          " + " + this->lowerPart[src1].toAlgArg())),
+                                  Predicate::True());
+            this->result.push_back(s);
+            this->lowerPart.erase(src1);
         }
 
     } else if (type->isVectorTy()) {
@@ -1397,6 +1516,28 @@ void Translator::evalBinaryOpOr(BinaryOperator* bo) {
         s = Statement::Or(dst, src1, src2);
         this->result.push_back(s);
         this->define(dst);
+
+        // heuristic for P434
+        if (BinaryOperator* t1c = dyn_cast<BinaryOperator>(t1)) {
+            if (BinaryOperator* t2c = dyn_cast<BinaryOperator>(t2)) {
+                if (t1c->getOpcode() != Instruction::BinaryOps::Xor
+                        && t2c->getOpcode() != Instruction::BinaryOps::Xor) {
+                    s = Statement::Comment("Heuristics applied.");
+                    this->result.push_back(s);
+                    s = Statement::Assert(Predicate::True(),
+                                          Predicate::Eq(dst,
+                                                        Arg::Flag(src1.toRangeArg() +
+                                                                  " + " + src2.toRangeArg())));
+                    this->result.push_back(s);
+                    s = Statement::Assume(Predicate::Eq(dst,
+                                                        Arg::Flag(src1.toAlgArg() +
+                                                                  " + " + src2.toAlgArg())),
+                                          Predicate::True());
+                    this->result.push_back(s);
+                }
+            }
+        }
+
 
     } else {
         errs() << "No translation:" << *bo << " (Unknown type!)\n";

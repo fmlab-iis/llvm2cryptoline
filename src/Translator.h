@@ -48,6 +48,12 @@ private:
     //std::string replaceChar(std::string str, char target, char c);
     bool legacy = false;
     CryptoLineType defaultType = CryptoLineType::uint;
+    bool safety = false;
+    bool mulSafety = true;
+
+    unsigned int discardCount = 0;
+
+    std::map<cryptoline::Argument, Variable> lowerPart; // a map storing the lower parts of variables using AND inst
 
     void evalLoad(LoadInst* li);
     void evalStore(StoreInst* si);
