@@ -437,6 +437,8 @@ void Translator::evalBinaryOpArithmetic(BinaryOperator* bo) {
                 this->result.push_back(s);
 
                 // heuristic for P434
+                if (this->heuristcs) {
+                //if (false) {
                 if (BinaryOperator* t1c = dyn_cast<BinaryOperator>(t1)) {
                     if (BinaryOperator* t2c = dyn_cast<BinaryOperator>(t2)) {
                         if ((t1c->getOpcode() == Instruction::BinaryOps::Add
@@ -457,6 +459,7 @@ void Translator::evalBinaryOpArithmetic(BinaryOperator* bo) {
                             this->result.push_back(s);
                         }
                     }
+                }
                 }
             }
             break;
@@ -603,6 +606,7 @@ void Translator::evalBinaryOpShl(BinaryOperator* bo) {
                 this->result.push_back(s);
 
                 // heuristic for P434
+                if (this->heuristcs) {
                 s = Statement::Comment("Heuristics applied.");
                 this->result.push_back(s);
                 s = Statement::Assert(Predicate::True(),
@@ -613,6 +617,7 @@ void Translator::evalBinaryOpShl(BinaryOperator* bo) {
                                                     Arg::Flag("tmp_to_be_used * (2**32)")),
                                       Predicate::True());
                 this->result.push_back(s);
+                }
             }
 
             // compute defined/undefined variables
@@ -1518,6 +1523,7 @@ void Translator::evalBinaryOpOr(BinaryOperator* bo) {
         this->define(dst);
 
         // heuristic for P434
+        if (this->heuristcs) {
         if (BinaryOperator* t1c = dyn_cast<BinaryOperator>(t1)) {
             if (BinaryOperator* t2c = dyn_cast<BinaryOperator>(t2)) {
                 if (t1c->getOpcode() != Instruction::BinaryOps::Xor
@@ -1536,6 +1542,7 @@ void Translator::evalBinaryOpOr(BinaryOperator* bo) {
                     this->result.push_back(s);
                 }
             }
+        }
         }
 
 

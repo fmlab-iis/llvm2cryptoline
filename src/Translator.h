@@ -29,7 +29,7 @@ public:
     VariableSet undefVars;
     VariableSet unusedVars;
     StatementList result;
-    bool heuristcs = true;
+    bool heuristcs = false;
     bool heuristcs_equiv = true;
     bool heuristcs_sound = true;
 
