@@ -1,0 +1,1 @@
+The IR is extracted after asserting a "#pragma" construct to unroll the 20-round loop.
